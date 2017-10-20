@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  socket_number: 
+  socket_label: MyString
+  action: MyString
+
+two:
+  socket_number: 
+  socket_label: MyString
+  action: MyString
