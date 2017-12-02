@@ -12,4 +12,7 @@
  *
  *= require_tree .
  *= require_self
+ *= require bootstrap-grid.min.css
+ *= require bootstrap-reboot.min.css
+ *= require bootstrap.min.css
  */

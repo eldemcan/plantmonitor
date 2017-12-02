@@ -1,9 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import SensorDataDisplay from '../components/sensorDisplay/sensorDataDisplay'
-import SocketControl from '../components/socketControl/socketControl'
+import SideControlMenu from '../components/sideMenu/sideControlMenu'
+import SensorDisplayMain from '../components/sensorDisplay/sensorDisplayMain'
 import DashboardActions from '../actions/dashboard/dashboardActions';
+import { Button, Container, Row, Grid, Col } from 'react-bootstrap';
 
 class DashBoardContainer extends React.Component {
 
@@ -19,13 +20,13 @@ class DashBoardContainer extends React.Component {
 
   setupSubscription() {
     this.pubSub.subscriptions.create('SensorDataChannel', {
-        connected: this.connected,
-        received: this.received.bind(this)
-      }
+      connected: this.connected,
+      received: this.received.bind(this)
+    }
     );
   }
 
-  connected(){
+  connected() {
     console.log('Connected');
   }
 
@@ -36,16 +37,20 @@ class DashBoardContainer extends React.Component {
     this.props.onDataReceived(data);
   }
 
+
   render() {
     const { temperature, humidity, lightState } = this.props;
 
-   console.log('props', this.props);
+    console.log('props', this.props);
 
     return (
       <div>
-        <SocketControl labelName = 'Light' labelDetail = {lightState}/>
-        <SensorDataDisplay headingLabel = 'Temperature' sensorData = { temperature }/>
-        <SensorDataDisplay headingLabel = 'Humidity' sensorData = { humidity }/>
+        <Grid fluid={true}>
+          <Row>
+            <Col sm={2}> <SideControlMenu />  </Col>
+            <Col sm={10} > <SensorDisplayMain /> </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }
@@ -63,7 +68,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   console.log('map dispatch to props');
 
-  return({
+  return ({
     onDataReceived: data => dispatch(DashboardActions.sensorDataReceived(data))
   })
 };

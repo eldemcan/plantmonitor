@@ -1,7 +1,9 @@
-import React from 'react'
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Label, Checkbox, Segment } from 'semantic-ui-react'
-import  DashboardApiClient from '../../actions/dashboardApiClient'
+import DashboardApiClient from '../../actions/dashboardApiClient';
+import Toggle from 'react-toggle';
+import "react-toggle/style.css";
+import { Container, Row, Grid, Col } from 'react-bootstrap';
 
 export default class SocketControl extends React.Component {
 
@@ -9,30 +11,27 @@ export default class SocketControl extends React.Component {
     super(props);
   }
 
-  toggle(_, { checked }) {
+  toggle(event) {
+    let { checked } = event.target
     let action = checked === true ? 'on' : 'off';
 
-    DashboardApiClient.controlSocket('1',  action);
+    DashboardApiClient.controlSocket('1', action);
   }
 
   render() {
-    const { labelName, labelDetail } = this.props;
+    const { labelName } = this.props;
 
-    return(
-      <div>
-        <Label as='a' color='green' image>
-          { labelName }
-          <Label.Detail>{ labelDetail ? 'On' : 'Off' }</Label.Detail>
-        </Label>
-        <Segment compact>
-          <Checkbox toggle onChange={this.toggle}/>
-        </Segment>
-      </div>
+    return (
+      <label>
+        <Toggle
+          defaultChecked={true}
+          onChange={this.toggle} />
+        <span>{labelName}</span>
+      </label>
     );
   }
 }
 
 SocketControl.propTypes = {
-  labelName: PropTypes.string,
-  labelDetail: PropTypes.bool
+  labelName: PropTypes.string
 };
