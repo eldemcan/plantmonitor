@@ -6,7 +6,6 @@ namespace :socket_control do
     socket_number = ARGV[2]
     system "python #{Rails.root}/lib/socket_control.py #{action} #{socket_number}"
   end
-
 end
 
 namespace :shell do

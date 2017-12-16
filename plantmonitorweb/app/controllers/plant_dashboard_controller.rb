@@ -19,14 +19,13 @@ class PlantDashboardController < ApplicationController
     result = @electric_socket_service
              .change_state_of_socket(allowed_params.first, allowed_params.second)
 
-
     render json: { result: result }
   end
 
   def receive_sensor_data
     allowed_params = sensor_params
 
-    logger.info allowed_params
+    logger.info "Incoming sensor prameters #{allowed_params}"
     ActionCable.server.broadcast('SensorDataChannel', allowed_params)
   end
 
@@ -37,10 +36,10 @@ class PlantDashboardController < ApplicationController
   end
 
   def socket_params
-    params.require(:socket).require([ :action, :socket_number ])
+    params.require(:socket).require(%i[action socket_number])
   end
 
   def sensor_params
-    params.permit([:eventName, :temperature, :humidity])
+    params.permit(%i[event data published_at coreid])
   end
 end

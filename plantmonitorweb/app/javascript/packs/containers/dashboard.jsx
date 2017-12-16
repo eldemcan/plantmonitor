@@ -30,25 +30,24 @@ class DashBoardContainer extends React.Component {
     console.log('Connected');
   }
 
-  received(data) {
-    console.log('Data from server');
-    console.log(data);
-    console.log('got data', this.props);
-    this.props.onDataReceived(data);
+  received(sensorObject) {
+    console.log('Data from server', sensorObject.data);
+    this.props.onDataReceived(JSON.parse(sensorObject.data));
   }
 
 
   render() {
-    const { temperature, humidity, lightState } = this.props;
-
+    const { sensorsData } = this.props;
     console.log('props', this.props);
+
+    console.log('can', sensorsData);
 
     return (
       <div>
-        <Grid fluid={true}>
+        <Grid fluid={true} >
           <Row>
             <Col sm={2}> <SideControlMenu />  </Col>
-            <Col sm={10} > <SensorDisplayMain /> </Col>
+            <Col sm={10}> <SensorDisplayMain sensorsData = { sensorsData } /> </Col>
           </Row>
         </Grid>
       </div>
@@ -56,11 +55,11 @@ class DashBoardContainer extends React.Component {
   }
 }
 
+
 const mapStateToProps = state => {
   console.log('DashBoardContainer', state);
   return {
-    temperature: state.dashboardReducer.temperature,
-    humidity: state.dashboardReducer.humidity,
+    sensorsData: state.dashboardReducer.sensorsData,
     lightState: state.dashboardReducer.lightState
   }
 };

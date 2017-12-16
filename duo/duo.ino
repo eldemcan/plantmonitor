@@ -47,6 +47,9 @@ void networkSetup() {
     }
 }
 
+// max without water 4025
+// submerged into water 1400-1500
+
 int readmoistureMoisture()
 {
     digitalWrite(moisturePower, HIGH);//turn D7 "On"
@@ -101,6 +104,6 @@ void loop() {
     Serial.print("Moisture");
     Serial.print(moisture);
 
-    delay(15000);
+    delay(1000);
 }
 

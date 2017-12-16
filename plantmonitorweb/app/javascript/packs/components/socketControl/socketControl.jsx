@@ -20,14 +20,19 @@ export default class SocketControl extends React.Component {
 
   render() {
     const { labelName } = this.props;
+    const spanStyle = {
+      verticalAlign: 'super'
+    }
 
     return (
-      <label>
-        <Toggle
-          defaultChecked={true}
-          onChange={this.toggle} />
-        <span>{labelName}</span>
-      </label>
+      <span>
+        <label>
+          <Toggle
+            defaultChecked={true}
+            onChange={this.toggle} />
+          <span style = {spanStyle}> {labelName} </span>
+        </label>
+      </span>
     );
   }
 }

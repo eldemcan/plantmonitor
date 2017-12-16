@@ -9,19 +9,22 @@ export default class SensorDisplayMain extends React.Component {
   }
 
   render() {
-    //TODO : pass sensor data
+    const { sensorsData } = this.props;
+
     return (
-      <Table>
+      <Table responsive bordered condensed>
         <thead>
           <tr>
           <th> Temperature </th>
           <th> Humidity </th>
+          <th> Soil Moisture </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td> 12 </td>
-            <td> 24 </td>
+            <td> { sensorsData.temperature } </td>
+            <td> { sensorsData.humidity } </td>
+            <td> { sensorsData.soilMoisture } </td>
           </tr>
         </tbody>
       </Table>

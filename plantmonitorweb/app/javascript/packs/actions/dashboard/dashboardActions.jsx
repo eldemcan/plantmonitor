@@ -4,11 +4,11 @@ import { SENSOR_DATA_RECEIVED } from '../../constants/dashboardActionTypes'
 class DashboardActions {
 
   sensorDataReceived(data){
+    console.log('eldo', data);
     return (
       {
         type: SENSOR_DATA_RECEIVED,
-        temperature: data.temperature,
-        humidity: data.humidity
+        sensorsData: Object.assign({}, data)
       }
     )
   }
