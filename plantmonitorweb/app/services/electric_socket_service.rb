@@ -2,7 +2,8 @@ class ElectricSocketService
 
   def change_state_of_socket(state, socket_number)
     is_state_changed = false
-    result = system "python #{Rails.root}/lib/socket_control.py #{state} #{socket_number}"
+    result = true
+    result = system "python #{Rails.root}/lib/socket_control.py #{state} #{socket_number}" if Feature.active?(:gpio)
 
     if result
       electric_socket = SocketModel.find(socket_number)

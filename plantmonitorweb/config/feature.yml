@@ -1,0 +1,7 @@
+production:
+    features:
+        gpio: true
+
+development:
+    features:
+        gpio: true

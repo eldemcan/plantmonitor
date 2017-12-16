@@ -1,14 +1,16 @@
-# from energenie import switch_on, switch_off
+from energenie import switch_on, switch_off
 import sys
 
 
 def switch_on(socket):
     print('Switching on', socket)
+    switch_on(socket)
     return True
 
 
 def switch_off(socket):
-    print('Switching off',  socket)
+    print('Switching off', socket)
+    switch_off(socket)
     return True
 
 
