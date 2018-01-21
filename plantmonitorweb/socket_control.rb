@@ -31,10 +31,10 @@ class Energenie
     @on_off_pin = PiPiper::Pin.new(:pin => 24, :direction => :out)
     @enable_pin = PiPiper::Pin.new(:pin => 25, :direction => :out)
 
-    on_off_pin.off
-    enable_pin.off
+    @on_off_pin.off
+    @enable_pin.off
 
-    signal_pins.map(&:off)
+    @signal_pins.map(&:off)
   end
 
   def change_plug_state(socket, signals_hash)
