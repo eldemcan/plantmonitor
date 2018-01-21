@@ -4,32 +4,33 @@ class Energenie
   include PiPiper
 
   ON_SIGNALS = {
-    0 => [true, true, false, true],
-    1 => [true, true, true, true],
-    2 => [false, true, true, true],
-    3 => [true, false, true, true],
-    4 => [false, false, true, true]
+    0 => %i[on on off on],
+    1 => %i[on on on on],
+    2 => %i[off on on on],
+    3 => %i[on off on on],
+    4 => %i[off off on on]
   }.freeze
 
   OFF_SIGNALS = {
-    0 => [false, false, true, true],
-    1 => [true, true, true, false],
-    2 => [false, true, true, false],
-    3 => [true, false, true, false],
-    4 => [false, false, true, false]
+    0 => %i[on on off off],
+    1 => %i[on on on off],
+    2 => %i[off on on off],
+    3 => %i[on off on off],
+    4 => %i[off off on off]
   }.freeze
 
   def initialize
     setup_pins
   end
 
+  # Pin numbers in this method comes from energenie manual
   def setup_pins
     @signal_pins = [17, 22, 23, 27].map do |pin|
-      PiPiper::Pin.new(:pin => pin, :direction => :out)
+      PiPiper::Pin.new(pin: pin, direction: :out)
     end
 
-    @on_off_pin = PiPiper::Pin.new(:pin => 24, :direction => :out)
-    @enable_pin = PiPiper::Pin.new(:pin => 25, :direction => :out)
+    @on_off_pin = PiPiper::Pin.new(pin: 24, direction: :out)
+    @enable_pin = PiPiper::Pin.new(pin: 25, direction: :out)
 
     @on_off_pin.off
     @enable_pin.off
@@ -39,10 +40,7 @@ class Energenie
 
   def change_plug_state(socket, signals_hash)
     socket_signals = signals_hash[socket]
-
-    @signal_pins.zip(socket_signals).each do |pin, signal|
-      signal ? pin.on : pin.off
-    end
+    @signal_pins.zip(socket_signals).each { |pin, signal| pin.send(signal) }
     sleep(0.1)
     @enable_pin.on
     sleep(0.25)
