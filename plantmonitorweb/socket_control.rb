@@ -41,7 +41,7 @@ class Energenie
     socket_signals = signals_hash[socket]
 
     @signal_pins.zip(socket_signals).each do |pin, signal|
-      value ? pin.on : pin.off
+      signal ? pin.on : pin.off
     end
     sleep(0.1)
     @enable_pin.on
