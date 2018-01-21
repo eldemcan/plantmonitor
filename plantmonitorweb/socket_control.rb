@@ -4,19 +4,19 @@ class Energenie
   include PiPiper
 
   ON_SIGNALS = {
-    0 => [true, false, true, true],
+    0 => [true, true, false, true],
     1 => [true, true, true, true],
-    2 => [true, true, true, false],
-    3 => [true, true, false, true],
-    4 => [true, true, false, false]
+    2 => [false, true, true, true],
+    3 => [true, false, true, true],
+    4 => [false, false, true, true]
   }.freeze
 
   OFF_SIGNALS = {
     0 => [false, false, true, true],
-    1 => [false, true, true, true],
+    1 => [true, true, true, false],
     2 => [false, true, true, false],
-    3 => [false, true, false, true],
-    4 => [false, true, false, false]
+    3 => [true, false, true, false],
+    4 => [false, false, true, false]
   }.freeze
 
   def initialize
@@ -38,17 +38,15 @@ class Energenie
   end
 
   def change_plug_state(socket, signals_hash)
-    signals_hash[socket].each do |index, value|
-      if value
-        @signal_pins[index].on
-      else
-        @signal_pins[index].off
-      end
+    socket_signals = signals_hash[socket]
+
+    @signal_pins.zip(socket_signals).each do |pin, signal|
+      value ? pin.on : pin.off
     end
     sleep(0.1)
-    @enable_ping.on
+    @enable_pin.on
     sleep(0.25)
-    @enable_ping.off
+    @enable_pin.off
   end
 
   def switch_on(socket = 0)
