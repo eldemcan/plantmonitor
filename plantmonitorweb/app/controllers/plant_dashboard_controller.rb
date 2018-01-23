@@ -16,10 +16,9 @@ class PlantDashboardController < ApplicationController
 
   def control_socket
     allowed_params = socket_params
-    result = @electric_socket_service
-             .change_state_of_socket(allowed_params.first, allowed_params.second)
+    @electric_socket_service.change_state_of_socket(allowed_params.first, allowed_params.second)
 
-    render json: { result: result }
+    head :ok
   end
 
   def receive_sensor_data
