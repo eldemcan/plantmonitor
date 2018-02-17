@@ -21,9 +21,11 @@ module Plantmonitorweb
     end
 
     def self.initialize_sensor_reading
-      p 'Initialize ArduinoSerialPort'
+      yaml_config = YAML.load_file("#{Rails.root.to_s}/config/config.yml")
+      port = yaml_config['arduino']['serial_port']
+      p "Initializing arduino on port #{port}"
       ArduinoSerialPort.close_port
-      ArduinoSerialPort.start_port
+      ArduinoSerialPort.start_port(port: port)
       main_thread = Thread.new do
         loop do
           ArduinoSerialPort.start_writing

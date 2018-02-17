@@ -6,7 +6,7 @@ class ArduinoSerialPort
   def self.start_port(given_opt = {})
     @@serial_port ||= begin
                         opt = {
-                          port: '/dev/cu.wchusbserial1420', # TODO get port from config file
+                          port: '',
                           baud_rate: 9600,
                           data_bits: 8,
                           stop_bits: 1,
