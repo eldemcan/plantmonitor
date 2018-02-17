@@ -10,12 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170824225022) do
+ActiveRecord::Schema.define(version: 20180211202933) do
+
+  create_table "sensor_models", force: :cascade do |t|
+    t.string "temperature"
+    t.string "humidity"
+    t.string "moisture"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "socket_models", force: :cascade do |t|
     t.integer "socket_id"
     t.string "socket_label", null: false
-    t.string "state"
+    t.boolean "state"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["socket_id"], name: "index_socket_models_on_socket_id", unique: true

@@ -7,5 +7,5 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 SocketModel.delete_all
-SocketModel.create(socket_id: 1, socket_label: 'light', state: 'off')
-SocketModel.create(socket_id:2, socket_label: 'unnamed', state: 'off')
+SocketModel.create(socket_id: 1, socket_label: 'light', state: false)
+SocketModel.create(socket_id: 2, socket_label: 'unnamed', state: false)

@@ -4,4 +4,4 @@ production:
 
 development:
     features:
-        gpio: true
+        gpio: false

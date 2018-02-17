@@ -2,31 +2,25 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>App React</div> at the bottom
 // of the page.
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
-import rootReducer from './reducers/index'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import rootReducer from './reducers/index';
 
-import DashBoardContainer from "./containers/dashboard.jsx";
+import DashBoardContainer from './containers/dashboard';
 
 const store = createStore(rootReducer);
 
 class App extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    return (
-      <DashBoardContainer />
-    );
+    return ( <DashBoardContainer /> );
   }
 }
 
 console.log('Initial state');
-console.log('store',store.getState());
+console.log('store', store.getState());
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     <Provider store={store}>

@@ -1,10 +1,9 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import SideControlMenu from '../components/sideMenu/sideControlMenu'
-import SensorDisplayMain from '../components/sensorDisplay/sensorDisplayMain'
+import React from 'react';
+import { connect } from 'react-redux';
+import SideControlMenu from '../components/sideMenu/sideControlMenu';
+import SensorDisplayMain from '../components/sensorDisplay/sensorDisplayMain';
 import DashboardActions from '../actions/dashboard/dashboardActions';
-import { Button, Container, Row, Grid, Col } from 'react-bootstrap';
+import { Row, Grid, Col } from 'react-bootstrap';
 
 class DashBoardContainer extends React.Component {
 
@@ -15,29 +14,29 @@ class DashBoardContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.setupSubscription()
+    this.setupSubscription();
   }
 
   setupSubscription() {
     this.pubSub.subscriptions.create('SensorDataChannel', {
       connected: this.connected,
-      received: this.received.bind(this)
-    }
-    );
+      received: this.received.bind(this),
+    });
   }
 
   connected() {
-    console.log('Connected');
+    console.log('Subscribed');
   }
 
   received(sensorObject) {
-    console.log('Data from server', sensorObject.data);
-    this.props.onDataReceived(JSON.parse(sensorObject.data));
+    console.log('Raw object', sensorObject);
+
+    this.props.onDataReceived(sensorObject);
   }
 
 
   render() {
-    const { sensorsData } = this.props;
+    const { sensorsData, lightState } = this.props;
     console.log('props', this.props);
 
     console.log('can', sensorsData);
@@ -46,8 +45,8 @@ class DashBoardContainer extends React.Component {
       <div>
         <Grid fluid={true} >
           <Row>
-            <Col sm={2}> <SideControlMenu />  </Col>
-            <Col sm={10}> <SensorDisplayMain sensorsData = { sensorsData } /> </Col>
+            <Col sm={2}> <SideControlMenu checked={lightState} />  </Col>
+            <Col sm={10}> <SensorDisplayMain sensorsData={sensorsData} /> </Col>
           </Row>
         </Grid>
       </div>
@@ -69,7 +68,7 @@ const mapDispatchToProps = dispatch => {
 
   return ({
     onDataReceived: data => dispatch(DashboardActions.sensorDataReceived(data))
-  })
+  });
 };
 
 export default connect(

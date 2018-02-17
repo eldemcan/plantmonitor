@@ -2,7 +2,7 @@ import { SENSOR_DATA_RECEIVED } from "../constants/dashboardActionTypes";
 
 const initialState =
   {
-    sensorsData: Object.assign({}, {temperature: '12,4',  humidity: '21', soilMoisture: '31'}),
+    sensorsData: Object.assign({}, {temperature: '12,4',  humidity: '21', moisture: '31'}),
     lightState: false
   };
 

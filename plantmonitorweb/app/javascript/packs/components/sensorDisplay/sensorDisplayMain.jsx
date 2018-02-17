@@ -24,7 +24,7 @@ export default class SensorDisplayMain extends React.Component {
           <tr>
             <td> { sensorsData.temperature } </td>
             <td> { sensorsData.humidity } </td>
-            <td> { sensorsData.soilMoisture } </td>
+            <td> { sensorsData.moisture } </td>
           </tr>
         </tbody>
       </Table>
