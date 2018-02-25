@@ -1,20 +1,31 @@
 // import PropTypes from 'prop-types'
-import { SENSOR_DATA_RECEIVED } from '../../constants/dashboardActionTypes';
+import * as types from '../../constants/dashboardActionTypes';
 
 class DashboardActions {
 
-  sensorDataReceived(data){
+  static sensorDataReceived(data) {
     console.log('Sensor data received', data);
 
     return (
       {
-        type: SENSOR_DATA_RECEIVED,
-        sensorsData: Object.assign({}, data)
+        type: types.SENSOR_DATA_RECEIVED,
+        sensorsData: Object.assign({}, data),
       }
-    )
+    );
+  }
+
+  static historicalDataReceived(data) {
+    console.log('Historical data recevied', data);
+
+    return (
+      {
+        type: types.HISTORICAL_DATA_RECEIVED,
+        historicalData: data,
+      }
+    );
   }
 
 }
 
-export default new DashboardActions();
+export default DashboardActions;
 

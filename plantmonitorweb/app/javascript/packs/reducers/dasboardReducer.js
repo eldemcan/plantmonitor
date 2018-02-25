@@ -1,17 +1,18 @@
-import { SENSOR_DATA_RECEIVED } from "../constants/dashboardActionTypes";
+import * as types from "../constants/dashboardActionTypes";
 
 const initialState =
   {
-    sensorsData: Object.assign({}, {temperature: '12,4',  humidity: '21', moisture: '31'}),
-    lightState: false
+    sensorsData: Object.assign({}, { temperature: '12,4', humidity: '21', moisture: '31' }),
+    historicalData: {},
+    lightState: false,
   };
 
-
 function dashboardReducer(state = initialState, action) {
-  switch(action.type){
-    case SENSOR_DATA_RECEIVED:
-    let combined = Object.assign({}, state, { sensorsData: action.sensorsData });
-      return combined;
+  switch (action.type) {
+    case types.SENSOR_DATA_RECEIVED:
+      return Object.assign({}, state, { sensorsData: action.sensorsData });
+    case types.HISTORICAL_DATA_RECEIVED:
+      return Object.assign({}, state, { historicalData: action.historicalData });
     default:
       return state;
   }

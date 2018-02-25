@@ -16,8 +16,8 @@ module Plantmonitorweb
     # -- all .rb files in that directory are automatically loaded.
     config.after_initialize do
       Rails.application.load_tasks # <---
-      Rake::Task['sensor_data:delete_sensor_data'].invoke
-      initialize_sensor_reading
+      # Rake::Task['sensor_data:delete_sensor_data'].invoke
+      # initialize_sensor_reading
     end
 
     def self.initialize_sensor_reading
@@ -43,8 +43,6 @@ module Plantmonitorweb
       Thread.list.each do |t|
         Thread.kill(t)
       end
-      sleep 1
-      ArduinoSerialPort.close_port
     end
   end
 end

@@ -5,6 +5,7 @@
   "app.css": "http://127.0.0.1:8080/packs/app.css",
   "app.js": "http://127.0.0.1:8080/packs/app.js",
   "application.js": "http://127.0.0.1:8080/packs/application.js",
+  "components/sensorDisplay/sensorDisplayGraph.js": "http://127.0.0.1:8080/packs/components/sensorDisplay/sensorDisplayGraph.js",
   "components/sensorDisplay/sensorDisplayMain.js": "http://127.0.0.1:8080/packs/components/sensorDisplay/sensorDisplayMain.js",
   "components/sideMenu/sideControlMenu.css": "http://127.0.0.1:8080/packs/components/sideMenu/sideControlMenu.css",
   "components/sideMenu/sideControlMenu.js": "http://127.0.0.1:8080/packs/components/sideMenu/sideControlMenu.js",

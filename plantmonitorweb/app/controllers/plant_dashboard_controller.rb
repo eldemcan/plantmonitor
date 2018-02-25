@@ -14,6 +14,15 @@ class PlantDashboardController < ApplicationController
     head :ok
   end
 
+  def historical_data
+    sensor_data = SensorModel.select(:id,
+     'CAST(temperature as int) as temp',
+     'CAST(moisture as int) as moist',
+     'CAST(humidity as int) as hum',
+     'TIME(created_at) as record_time')
+    render json: sensor_data
+  end
+
   def socket_state
     unless socket_state_params.nil?
       state = @electric_socket_service.get_state_of_socket(socket_state_params)

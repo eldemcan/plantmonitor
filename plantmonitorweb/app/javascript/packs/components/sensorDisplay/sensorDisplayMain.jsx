@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button, Container, Row, Grid, Col, Table } from 'react-bootstrap';
 
 export default class SensorDisplayMain extends React.Component {
-
   constructor(props) {
     super(props);
   }
@@ -15,16 +14,16 @@ export default class SensorDisplayMain extends React.Component {
       <Table responsive bordered condensed>
         <thead>
           <tr>
-          <th> Temperature </th>
-          <th> Humidity </th>
-          <th> Soil Moisture </th>
+            <th> Temperature </th>
+            <th> Humidity </th>
+            <th> Soil Moisture </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td> { sensorsData.temperature } </td>
-            <td> { sensorsData.humidity } </td>
-            <td> { sensorsData.moisture } </td>
+            <td> {sensorsData.temperature} </td>
+            <td> {sensorsData.humidity} </td>
+            <td> {sensorsData.moisture} </td>
           </tr>
         </tbody>
       </Table>

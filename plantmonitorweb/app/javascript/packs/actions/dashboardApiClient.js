@@ -2,6 +2,10 @@ import ApiClient from './apiClient.jsx';
 
 class DashboardApiClient {
 
+  static getHistoricalData() {
+    return ApiClient.get('/dashboard/historical_data').then(data => data.json());
+  }
+
   static controlSocket(socketNumber, action) {
     const payload = {
       socket: {
