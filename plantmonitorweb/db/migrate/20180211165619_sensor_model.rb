@@ -1,9 +1,9 @@
 class SensorModel < ActiveRecord::Migration[5.1]
   def change
-    create_table :sensor_model do |t|
-      t.string :temperature
-      t.string :humidity
-      t.string :soil_moisture
+    create_table :sensor_models do |t|
+      t.integer :temperature
+      t.integer :humidity
+      t.integer :moisture
       t.timestamps
     end
   end

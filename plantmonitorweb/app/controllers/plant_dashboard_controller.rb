@@ -15,11 +15,13 @@ class PlantDashboardController < ApplicationController
   end
 
   def historical_data
-    sensor_data = SensorModel.select(:id,
-     'CAST(temperature as int) as temp',
-     'CAST(moisture as int) as moist',
-     'CAST(humidity as int) as hum',
-     'TIME(created_at) as record_time')
+    sensor_data = SensorModel.select(
+      :id,
+      :temperature,
+      :moisture,
+      :humidity,
+      'TIME(created_at) as record_time'
+      )
     render json: sensor_data
   end
 
