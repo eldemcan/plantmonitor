@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180211165619) do
+ActiveRecord::Schema.define(version: 20180303153831) do
 
   create_table "sensor_models", force: :cascade do |t|
     t.integer "temperature"
@@ -27,6 +27,14 @@ ActiveRecord::Schema.define(version: 20180211165619) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["socket_id"], name: "index_socket_models_on_socket_id", unique: true
+  end
+
+  create_table "task_models", force: :cascade do |t|
+    t.string "description"
+    t.string "job_class"
+    t.string "job_id"
+    t.string "interval"
+    t.string "params"
   end
 
 end

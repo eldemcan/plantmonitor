@@ -10,6 +10,7 @@ module Plantmonitorweb
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
+    config.autoload_paths << Rails.root.join('app', 'schedule')
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -18,7 +19,9 @@ module Plantmonitorweb
       Rails.application.load_tasks # <---
       # Rake::Task['sensor_data:delete_sensor_data'].invoke
       # initialize_sensor_reading
+
     end
+
 
     def self.initialize_sensor_reading
       yaml_config = YAML.load_file("#{Rails.root.to_s}/config/config.yml")

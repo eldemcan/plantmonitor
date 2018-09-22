@@ -13,7 +13,6 @@ import DashBoardContainer from './containers/dashboard';
 const store = createStore(rootReducer);
 
 class App extends React.Component {
-
   render() {
     return ( <DashBoardContainer /> );
   }

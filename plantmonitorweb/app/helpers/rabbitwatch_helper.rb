@@ -1,0 +1,2 @@
+module RabbitwatchHelper
+end

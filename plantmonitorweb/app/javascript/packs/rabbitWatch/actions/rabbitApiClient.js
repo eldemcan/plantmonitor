@@ -1,8 +1,17 @@
 import ApiClient from './apiClient.jsx';
 
-class DashboardApiClient {
+class JobsApiClient {
+
   static getTaskTypes() {
-    return ApiClient.get('/dashboard/historical_data').then(data => data.json());
+    return ApiClient.get('/rabbitwatch/tasks').then(data => data.json());
+  }
+
+  static getRunningJobs() {
+    return ApiClient.get('/rabbitwatch/fetch_jobs').then(data => data.json());
+  }
+
+  static postJobParams(payload) {
+    return ApiClient.post('/rabbitwatch/create', payload);
   }
 
   static controlSocket(socketNumber, action) {
@@ -35,4 +44,4 @@ class DashboardApiClient {
   }
 }
 
-export default DashboardApiClient;
+export default JobsApiClient;
