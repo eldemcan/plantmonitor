@@ -1,17 +1,8 @@
 # frozen_string_literal: true
 
 class SchedulerService
-  def self.setup
-    p 'Setting scheduler'
-    @scheduler = Rufus::Scheduler.new
-  end
-
-  class << self
-    attr_reader :scheduler
-  end
-
   def self.schedule_task(task)
-    scheduler.cron(task.interval, task)
+    Rufus::Scheduler.singleton.cron(task.interval, task)
   end
 
   def self.verify_parameters(params)
@@ -32,7 +23,8 @@ class SchedulerService
   end
 
   def self.kill_task(job_id)
-    job = scheduler.job(job_id)
+    job = Rufus::Scheduler.singleton.job(job_id)
+    job.unschedule
     job.kill
     task = TaskModel.find_by(job_id: job_id)
     task.destroy
@@ -64,5 +56,9 @@ class SchedulerService
     task = Object.const_get(params[:jobTypes].capitalize).new(cron_exp, params[:jobParams])
     job_id = schedule_task(task)
     TaskModel.save_task(task, job_id)
+  end
+
+  def self.clean_tasks
+    TaskModel.delete_all
   end
 end
