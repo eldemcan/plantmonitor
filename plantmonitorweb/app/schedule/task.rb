@@ -9,9 +9,7 @@ class Task
 
   def call(job, time)
     @job = job
-
-    p "
-         Job_id: #{job.id},
-      "
+    Rails.logger.info("[HELLO WORLD]")
+    p "Hello world, Job_id: #{job.id}"
   end
 end

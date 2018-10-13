@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FormControl, FieldGroup, ControlLabel, Grid, Row, Col, Button } from 'react-bootstrap';
+import { FormControl, FieldGroup, ControlLabel, Grid, Row, Col, Button, Checkbox } from 'react-bootstrap';
 import styled from 'styled-components';
 import apiClient from './actions/rabbitApiClient';
 
@@ -64,11 +64,12 @@ class JobCreationContainer extends Component {
     };
 
     this.rangesForAt = {
-      hours: this.range(0, 59),
-      minutes: this.range(0, 23),
+      hours: this.range(0, 23),
+      minutes: this.range(0, 59),
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleJobParams = this.handleJobParams.bind(this);
     this.handleChangeForValues = this.handleChangeForValues.bind(this);
   }
 
@@ -102,6 +103,9 @@ class JobCreationContainer extends Component {
     obj[id] = value;
     obj['frequency'] = defaultFrequencyValues[value];
 
+    console.log('helll', this.state);
+    console.log('faaaaak', obj);
+
     this.setState(Object.assign({}, this.state, obj ));
   }
 
@@ -116,39 +120,44 @@ class JobCreationContainer extends Component {
     );
   }
 
-  renderDropdown(title = '', data = [], id, handlerFun) {
+  renderDropdown(title = '', data = [], id, handlerFun, readOnly = false) {
 
-    if (data.length === 0) {
-      return (<div></div>);
-    }
-
-    console.log(
-      'fecking data', data
-    );
     return (
       <div>
         <ControlLabel>{title}</ControlLabel>
-        <FormControl id={id} componentClass="select"  onChange = { (e) => handlerFun(e) }>
-           { <option value= {data[0].value} selected > {data[0].displayValue} </option> }
-           { data.slice(1, data.length).map(item => <option value= {item.value} > {item.displayValue} </option>  )}
+        <FormControl id={id} value={ this.state[id] } componentClass="select"  readOnly = { readOnly } onChange = { (e) => handlerFun(e) }>
+           { data.map(item => <option value= {item.value} > {item.displayValue} </option>  )}
         </FormControl>
       </div>
     );
   }
 
-  renderScheduleSection(title, firstDataSource, secondDataSource, firstId, secondId) {
+  renderScheduleSection(title, firstDataSource, secondDataSource, firstId, secondId, handlerFunc1, handlerFunc2) {
     return (
       <Row>
-        <Col md={2}> <DropDownLabel>  {title} </DropDownLabel> </Col>
-        <Col md={5}> {this.renderDropdown('', firstDataSource, firstId, this.handleChange)} </Col>
-        <Col md={5}> {this.renderDropdown('', secondDataSource, secondId, this.handleChangeForValues)} </Col>
+        <Col md={2}> <DropDownLabel> {title} </DropDownLabel> </Col>
+        <Col md={5}> {this.renderDropdown('', firstDataSource, firstId, handlerFunc1)} </Col>
+        <Col md={5}> {this.renderDropdown('', secondDataSource, secondId, handlerFunc2)} </Col>
+      </Row>
+    );
+  }
+
+  // // TODO refactor
+  renderTimeSection(title, firstDataSource, secondDataSource, firstId, secondId, handlerFunc1, handlerFunc2) {
+    const readOnly = !this.state.allowSetTime;
+
+    return (
+      <Row>
+        <Col md={2}> <DropDownLabel> <Checkbox onClick={e => this.setState(Object.assign({}, this.state, { allowSetTime: e.target.checked }))}> {title} </Checkbox> </DropDownLabel> </Col>
+        <Col md={5}> {this.renderDropdown('', firstDataSource, firstId, handlerFunc1, readOnly)} </Col>
+        <Col md={5}> {this.renderDropdown('', secondDataSource, secondId, handlerFunc2, readOnly)} </Col>
       </Row>
     );
   }
 
   // TODO: try to do it without re-rendering
   handleJobParams(e) {
-    this.setState({ jobParams: e.target.value });
+    this.setState(Object.assign({}, this.state, { jobParams: e.target.value }));
   }
   // TODO get data when it is written
   renderInputFieldForParameters() {
@@ -170,9 +179,15 @@ class JobCreationContainer extends Component {
   }
 
   handleSubmit() {
-    const { frequencyType, frequency, minutes, hours, jobParams } = this.state;
+    const { frequencyType, frequency, minutes, hours, jobParams, allowSetTime } = this.state;
     const jobTypes = this.state.jobTypes || this.props.jobTypes[0]; // default jobType from props or new one from state
     const payload = { frequencyType, frequency, minutes, hours, jobParams, jobTypes }
+
+    if(!allowSetTime) {
+      delete payload['hours'];
+      delete payload['minutes'];
+    }
+
     console.log('payload', payload)
     apiClient.postJobParams(payload);
   }
@@ -194,8 +209,8 @@ class JobCreationContainer extends Component {
           </Col>
         </Row>
 
-        {this.renderScheduleSection('Every:', this.everyData, rangeData, 'frequencyType', 'frequency')}
-        {this.renderScheduleSection('At:', hours, minutes, 'hours', 'minutes')}
+        {this.renderScheduleSection('Every:', this.everyData, rangeData, 'frequencyType', 'frequency', this.handleChange, this.handleChangeForValues)}
+        {this.renderTimeSection('At:', hours, minutes, 'hours', 'minutes', this.handleChangeForValues, this.handleChangeForValues)}
 
         <StyledRow>
           <Col md={2} mdOffset={10} >

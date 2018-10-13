@@ -8,22 +8,12 @@ class RabbitwatchController < ApplicationController
   end
 
   def task_types
-    # render json: [ { display_value: 'can', value: 0 }, { display_value: 'eldem', value: 1 } ]
-    render json: ['can', 'eldem']
+    render json: task_names
   end
 
   def create
     filtered_params = create_job_params
-    Rails.logger.info "incoming: #{filtered_params.inspect}"
-
-    Rails.logger.info "correct: #{SchedulerService.verify_parameters(filtered_params)}"
-    # scheduler = SchedulerService.scheduler
-    # p "object_id: #{scheduler.object_id}"
-    # task = Task.new('10s', 'can eldem')
-    # job_id = SchedulerService.schedule_task(task)
-    # TaskModel.save_task(task, job_id)
-    # job = scheduler.job(job_id)
-    # p "return value: #{job_id}"
+    SchedulerService.create_task(filtered_params)
 
     head :ok
   end
@@ -32,7 +22,14 @@ class RabbitwatchController < ApplicationController
     render json: TaskModel.all
   end
 
+  def destroy_job
+    Rails.logger.info("Here I am #{params.inspect}")
+    job_id = params_for_destroy_job[:jobId]
+    SchedulerService.kill_task(job_id)
+  end
+
   private
+
   # TODO: engine
   def task_names
     root_path = Rails.root.join('app', 'schedule')
@@ -41,6 +38,10 @@ class RabbitwatchController < ApplicationController
                  .select { |fn| File.extname(fn) == '.rb' }
                  .map { |fn| fn.gsub('.rb', '') }
     ruby_files
+  end
+
+  def params_for_destroy_job
+    params.permit(:jobId)
   end
 
   def create_job_params
@@ -53,5 +54,4 @@ class RabbitwatchController < ApplicationController
       :minutes
     )
   end
-
 end

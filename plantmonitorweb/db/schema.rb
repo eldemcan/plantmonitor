@@ -30,7 +30,6 @@ ActiveRecord::Schema.define(version: 20180303153831) do
   end
 
   create_table "task_models", force: :cascade do |t|
-    t.string "description"
     t.string "job_class"
     t.string "job_id"
     t.string "interval"

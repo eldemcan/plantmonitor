@@ -11,7 +11,7 @@ class SchedulerService
   end
 
   def self.schedule_task(task)
-    scheduler.every(task.interval, task)
+    scheduler.cron(task.interval, task)
   end
 
   def self.verify_parameters(params)
@@ -31,24 +31,38 @@ class SchedulerService
       ranges[:hour].include?(params[:hours].to_i)
   end
 
-  def convert_params_to_cron(params)
-    time_format = "#{params[:hours]}:#{params[:minutes]}"
-    type = params[:frequency_type]
-
-    if %w[min hour days].include?(type)
-      expression = type[0] + params[:frequency]
-    elsif type == 'month'
-      expression = "#{params[:frequency]}mth"
-    else # 'daysw'
-      days = %i[sunday monday tuesday wednesday thursday friday saturday]
-      expression = days[params[:frequency]]
-    end
-    Cronter.convert_to_cron(expression, time: time_format)
+  def self.kill_task(job_id)
+    job = scheduler.job(job_id)
+    job.kill
+    task = TaskModel.find_by(job_id: job_id)
+    task.destroy
   end
 
-# <ActionController::Parameters {"frequencyType"=>"min", "frequency"=>"1", "jobParams"=>"", "jobTypes"=>"can", "hours"=>"0", "minutes"=>"0"} permitted: true>
-  def create_task(params)
+  def self.convert_params_to_cron(params)
+    type = params[:frequencyType]
+    frequency = params[:frequency].to_i
+    if %w[min hour days].include?(type)
+      exp = frequency.to_s + type[0]
+    elsif type == 'month'
+      exp = %i[jan feb mar apr may jun jul aug sep oct nov dec][frequency]
+    else # 'daysw'
+      exp = %i[sunday monday tuesday wednesday thursday friday saturday][frequency]
+    end
+
+    if params.key?(:hours) && params.key?(:minutes)
+      time_format = "#{params[:hours]}:#{params[:minutes]}"
+      Cronter.convert_to_cron(exp, time: time_format)
+    else
+      Cronter.convert_to_cron(exp)
+    end
+  end
+
+  def self.create_task(params)
     return unless verify_parameters(params)
-    # instance = Object.const_get(params[:jobTypes]).new(params[:])
+
+    cron_exp = convert_params_to_cron(params)
+    task = Object.const_get(params[:jobTypes].capitalize).new(cron_exp, params[:jobParams])
+    job_id = schedule_task(task)
+    TaskModel.save_task(task, job_id)
   end
 end

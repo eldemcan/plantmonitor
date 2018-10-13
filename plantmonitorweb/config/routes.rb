@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
-  get 'rabbitwatch/index',   action: :index,      controller: 'rabbitwatch'
-  get 'rabbitwatch/tasks',   action: :task_types, controller: 'rabbitwatch'
-  post 'rabbitwatch/create', action: :create,     controller: 'rabbitwatch'
-  get 'rabbitwatch/fetch_jobs',    action: :fetch_jobs,       controller: 'rabbitwatch'
+  get 'rabbitwatch/index',        action: :index,       controller: 'rabbitwatch'
+  get 'rabbitwatch/tasks',        action: :task_types,  controller: 'rabbitwatch'
+  post 'rabbitwatch/create',      action: :create,      controller: 'rabbitwatch'
+  get 'rabbitwatch/fetch_jobs',   action: :fetch_jobs,  controller: 'rabbitwatch'
+  post 'rabbitwatch/destroy_job', action: :destroy_job, controller: 'rabbitwatch'
 
   get 'dashboard', action: :index, controller: 'plant_dashboard'
   get 'dashboard/historical_data', action: :historical_data, controller: 'plant_dashboard'

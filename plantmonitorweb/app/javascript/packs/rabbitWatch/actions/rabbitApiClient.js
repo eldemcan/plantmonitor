@@ -14,6 +14,10 @@ class JobsApiClient {
     return ApiClient.post('/rabbitwatch/create', payload);
   }
 
+  static killJob(jobId) {
+    return ApiClient.post('/rabbitwatch/destroy_job', { jobId }).then(data => data);
+  }
+
   static controlSocket(socketNumber, action) {
     const payload = {
       socket: {
