@@ -53,7 +53,7 @@ class SchedulerService
     return unless verify_parameters(params)
 
     cron_exp = convert_params_to_cron(params)
-    task = Object.const_get(params[:jobTypes].capitalize).new(cron_exp, params[:jobParams])
+    task = Object.const_get(params[:jobTypes]).new(cron_exp, params[:jobParams])
     job_id = schedule_task(task)
     TaskModel.save_task(task, job_id)
   end

@@ -2,7 +2,7 @@ import { Table, Button } from 'react-bootstrap';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import apiClient from './actions/rabbitApiClient';
-import jobActions from './actions/jobActions';
+import JobActions from './actions/jobActions';
 
 class JobListComponent extends Component {
 
@@ -25,7 +25,7 @@ class JobListComponent extends Component {
     const { fetchRunningJobs } = this.props;
 
     apiClient.killJob(jobId).then(() => {
-      apiClient.getRunningJobs().then(jobs => fetchRunningJobs(jobActions.jobsReceived(jobs)))
+      apiClient.getRunningJobs().then(jobs => fetchRunningJobs(JobActions.jobsReceived(jobs)))
     });
   }
 

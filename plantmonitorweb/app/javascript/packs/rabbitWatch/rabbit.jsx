@@ -6,7 +6,7 @@ import rootReducer from './reducers/rootReducer';
 import JobListComponent from './jobListComponent';
 import JobCreationContainer from './jobCreationContainer';
 import apiClient from './actions/rabbitApiClient';
-import jobActions from './actions/jobActions';
+import JobActions from './actions/jobActions';
 
 const store = createStore(rootReducer);
 
@@ -20,8 +20,8 @@ class JobsContainer extends Component {
 
   componentDidMount() {
     console.log('mounted');
-    apiClient.getTaskTypes().then(jobTypes => store.dispatch(jobActions.jobTypesReceived(jobTypes)));
-    apiClient.getRunningJobs().then(jobs => store.dispatch(jobActions.jobsReceived(jobs)));
+    apiClient.getTaskTypes().then(jobTypes => store.dispatch(JobActions.jobTypesReceived(jobTypes)));
+    apiClient.getRunningJobs().then(jobs => store.dispatch(JobActions.jobsReceived(jobs)));
   }
 
   render() {

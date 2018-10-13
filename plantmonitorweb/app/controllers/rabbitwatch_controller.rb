@@ -8,7 +8,7 @@ class RabbitwatchController < ApplicationController
   end
 
   def task_types
-    render json: task_names
+    render json: task_names || ''
   end
 
   def create
@@ -34,10 +34,9 @@ class RabbitwatchController < ApplicationController
   def task_names
     root_path = Rails.root.join('app', 'schedule')
     file_names = Dir.entries(root_path)
-    ruby_files = file_names
-                 .select { |fn| File.extname(fn) == '.rb' }
-                 .map { |fn| fn.gsub('.rb', '') }
-    ruby_files
+    file_names
+      .select { |fn| File.extname(fn) == '.rb' }
+      .map { |fn| fn.gsub('.rb', '').camelize }
   end
 
   def params_for_destroy_job

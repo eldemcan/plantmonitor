@@ -1,6 +1,6 @@
 import * as types from '../constants/jobActionsTypes';
 
-class jobActions {
+class JobActions {
   static jobTypesReceived(jobTypes) {
     return (
       {
@@ -20,4 +20,4 @@ class jobActions {
   }
 }
 
-export default jobActions;
+export default JobActions;

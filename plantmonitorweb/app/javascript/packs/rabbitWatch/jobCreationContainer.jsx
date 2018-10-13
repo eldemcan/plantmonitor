@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { FormControl, FieldGroup, ControlLabel, Grid, Row, Col, Button, Checkbox } from 'react-bootstrap';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import apiClient from './actions/rabbitApiClient';
+import JobActions from './actions/jobActions';
 
 const DropDownLabel = styled.p`
     padding-top: 23px;
 `;
 const StyledRow = styled(Row)`
    padding-top: 23px;
+   padding-bottom: 10px;
 `;
 
 // JobCreationContainer.propTypes = { jobTypes : PropTypes.array,
@@ -182,14 +185,16 @@ class JobCreationContainer extends Component {
     const { frequencyType, frequency, minutes, hours, jobParams, allowSetTime } = this.state;
     const jobTypes = this.state.jobTypes || this.props.jobTypes[0]; // default jobType from props or new one from state
     const payload = { frequencyType, frequency, minutes, hours, jobParams, jobTypes }
+    const { fetchRunningJobs } = this.props;
 
     if(!allowSetTime) {
       delete payload['hours'];
       delete payload['minutes'];
     }
 
-    console.log('payload', payload)
-    apiClient.postJobParams(payload);
+    apiClient.postJobParams(payload).then(() => {
+      apiClient.getRunningJobs().then(jobs => fetchRunningJobs(JobActions.jobsReceived(jobs)))
+    });
   }
 
   render() {
@@ -222,9 +227,14 @@ class JobCreationContainer extends Component {
   }
 }
 
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchRunningJobs: action => dispatch(action),
+  };
+}
+
 JobCreationContainer.defaultProps = {
   jobTypes: [],
 };
 
-export default JobCreationContainer;
-
+export default connect(null, mapDispatchToProps)(JobCreationContainer);
