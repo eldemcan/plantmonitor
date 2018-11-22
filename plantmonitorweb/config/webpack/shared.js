@@ -2,7 +2,6 @@
 
 /* eslint global-require: 0 */
 /* eslint import/no-dynamic-require: 0 */
-
 const webpack = require('webpack')
 const { basename, dirname, join, relative, resolve } = require('path')
 const { sync } = require('glob')
@@ -15,12 +14,21 @@ const extensionGlob = `**/*{${settings.extensions.join(',')}}*`
 const entryPath = join(settings.source_path, settings.source_entry_path)
 const packPaths = sync(join(entryPath, extensionGlob))
 
+// path /Users/celdem/Desktop/recovery/plantmonitor/plantmonitorweb/public/packs
+// public path http://0.0.0.0:8080/packs/
+
+// packPaths.push('vendor/assets/javascripts/modules/white_rabbit/app/javascript/white_rabbit/white_rabbit')
+console.log('packs', packPaths);
+console.log('path', output.path);
+console.log('public path', output.publicPath);
+
 module.exports = {
   entry: packPaths.reduce(
     (map, entry) => {
       const localMap = map
       const namespace = relative(join(entryPath), dirname(entry))
       localMap[join(namespace, basename(entry, extname(entry)))] = resolve(entry)
+      console.log('what is going on', localMap)
       return localMap
     }, {}
   ),
