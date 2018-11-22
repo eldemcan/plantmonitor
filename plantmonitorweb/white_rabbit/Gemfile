@@ -14,4 +14,7 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-gem 'webpacker', '3.4.3'
+gem 'sqlite3'
+gem 'cronter'
+gem 'rufus-scheduler'
+gem 'cron2english', '~> 0.1.6'
