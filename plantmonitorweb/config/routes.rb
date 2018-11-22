@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
-  get 'rabbitwatch/index',        action: :index,       controller: 'rabbitwatch'
-  get 'rabbitwatch/tasks',        action: :task_types,  controller: 'rabbitwatch'
-  post 'rabbitwatch/create',      action: :create,      controller: 'rabbitwatch'
-  get 'rabbitwatch/fetch_jobs',   action: :fetch_jobs,  controller: 'rabbitwatch'
-  post 'rabbitwatch/destroy_job', action: :destroy_job, controller: 'rabbitwatch'
+
+  # namespace :rabbitwatch do
+  #   match 'index', via: [:get], action: 'index'
+  #   match 'tasks', via: [:get], action: 'tasks'
+  #   match 'create', via: [:post], action: 'create'
+  #   match 'fetch_jobs', via: [:get], action: 'fetch_jobs'
+  # end
 
   get 'dashboard', action: :index, controller: 'plant_dashboard'
   get 'dashboard/historical_data', action: :historical_data, controller: 'plant_dashboard'
@@ -11,5 +13,5 @@ Rails.application.routes.draw do
   post 'dashboard', action: :control_socket, controller: 'plant_dashboard'
   post 'send_data', action: :receive_sensor_data, controller: 'plant_dashboard'
 
-  mount WhiteRabbit::Engine => "/white_rabbit"
+  mount WhiteRabbit::Engine => '/white_rabbit'
 end

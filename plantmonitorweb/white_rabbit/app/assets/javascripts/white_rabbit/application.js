@@ -13,3 +13,5 @@
 //= require rails-ujs
 //= require activestorage
 //= require_tree .
+
+console.log('Application js in engine');

@@ -1,1 +1,0 @@
-Webpacker::Compiler.watched_paths << "#{WhiteRabbit::Engine.root}/app/javascript/**/*"

@@ -3,4 +3,4 @@ repo = Feature::Repository::YamlRepository.new("#{Rails.root}/config/feature.yml
 Feature.set_repository repo
 
 # TODO move to engine
-SchedulerService.clean_tasks
+# SchedulerService.clean_tasks

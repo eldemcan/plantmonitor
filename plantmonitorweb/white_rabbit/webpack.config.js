@@ -2,24 +2,24 @@
  * Webpack configuration used to compile engine assets and save them for sprockets.
  */
 
-const path = require('path')
+const path = require('path');
 
 module.exports = {
   entry: {
-    'white_rabbit': path.resolve(__dirname, 'app/javascript/white_rabbit/white_rabbit.js'),
+    white_rabbit: path.resolve(__dirname, 'app/javascript/white_rabbit/admin.jsx'),
   },
 
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'app/assets/javascripts'),
-    library: 'white_rabbit',
-    libraryTarget: 'umd'
+    // library: 'admin',
+    // libraryTarget: 'umd',
   },
 
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -31,6 +31,6 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx']
+    extensions: ['*', '.js', '.jsx'],
   },
-}
+};
