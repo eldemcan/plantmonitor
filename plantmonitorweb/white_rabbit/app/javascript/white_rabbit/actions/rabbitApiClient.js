@@ -1,10 +1,10 @@
 import ApiClient from './apiClient.jsx';
 
 class JobsApiClient {
-  static baseUrl = '/white_rabbit';
+  static baseUrl = 'white_rabbit';
 
   static getTaskTypes() {
-    return ApiClient.get(`${this.baseUrl}/tasks`).then(data => data.json());
+    return ApiClient.get(`/${this.baseUrl}/tasks`).then(data => data.json());
   }
 
   static getRunningJobs() {

@@ -2,8 +2,8 @@
 
 WhiteRabbit::Engine.routes.draw do
   get 'index', action: :index, controller: 'admin'
-  # match 'index', via: [:get], action: 'index'
-  # match 'tasks', via: [:get], action: 'tasks'
-  # match 'create', via: [:post], action: 'create'
-  # match 'fetch_jobs', via: [:get], action: 'fetch_jobs'
+  get 'tasks', action: :task_types, controller: 'admin'
+  get 'fetch_jobs', action: :fetch_jobs, controller: 'admin'
+  post 'create', action: :create, controller: 'admin'
+  post 'destroy_job', action: :destroy_job, controller: 'admin'
 end

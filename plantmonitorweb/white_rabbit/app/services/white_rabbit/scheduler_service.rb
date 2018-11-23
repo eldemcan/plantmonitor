@@ -25,8 +25,8 @@ module WhiteRabbit
 
     def self.kill_task(job_id)
       job = Rufus::Scheduler.singleton.job(job_id)
-      job.unschedule
-      job.kill
+      job&.unschedule
+      job&.kill
       task = TaskModel.find_by(job_id: job_id)
       task.destroy
     end
@@ -54,7 +54,7 @@ module WhiteRabbit
       return unless verify_parameters(params)
 
       cron_exp = convert_params_to_cron(params)
-      task = Object.const_get(params[:jobTypes]).new(cron_exp, params[:jobParams])
+      task = Object.const_get("WhiteRabbit::#{params[:jobTypes]}").new(cron_exp, params[:jobParams])
       job_id = schedule_task(task)
       TaskModel.save_task(task, job_id)
     end

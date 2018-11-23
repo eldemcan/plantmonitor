@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180303153831) do
+ActiveRecord::Schema.define(version: 2018_11_23_110720) do
 
   create_table "sensor_models", force: :cascade do |t|
     t.integer "temperature"
@@ -30,6 +30,13 @@ ActiveRecord::Schema.define(version: 20180303153831) do
   end
 
   create_table "task_models", force: :cascade do |t|
+    t.string "job_class"
+    t.string "job_id"
+    t.string "interval"
+    t.string "params"
+  end
+
+  create_table "white_rabbit_task_models", force: :cascade do |t|
     t.string "job_class"
     t.string "job_id"
     t.string "interval"

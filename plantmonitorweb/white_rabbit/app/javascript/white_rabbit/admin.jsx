@@ -52,6 +52,7 @@ const JobsContainerWired = connect(
 // console.log('Initial state');
 // console.log('store', store.getState());
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('starting...');
   ReactDOM.render(
     <Provider store={store}>
       <Rabbit />

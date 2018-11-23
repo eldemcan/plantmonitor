@@ -5,7 +5,6 @@ module WhiteRabbit
     protect_from_forgery with: :null_session
 
     def index
-      Rails.logger.info('rrrrrrrrrrrr')
       render :index
       # render json: get_task_names
     end
@@ -26,7 +25,6 @@ module WhiteRabbit
     end
 
     def destroy_job
-      Rails.logger.info("Here I am #{params.inspect}")
       job_id = params_for_destroy_job[:jobId]
       SchedulerService.kill_task(job_id)
     end
@@ -34,7 +32,7 @@ module WhiteRabbit
     private
 
     def task_names
-      root_path = Rails.root.join('app', 'schedule')
+      root_path = Rails.root.join('white_rabbit', 'app', 'schedule', 'white_rabbit')
       file_names = Dir.entries(root_path)
       file_names
         .select { |fn| File.extname(fn) == '.rb' }
