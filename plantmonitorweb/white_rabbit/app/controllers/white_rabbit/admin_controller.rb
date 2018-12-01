@@ -31,6 +31,7 @@ module WhiteRabbit
 
     private
 
+    # cache this one
     def task_names
       root_path = Rails.root.join('white_rabbit', 'app', 'schedule', 'white_rabbit')
       file_names = Dir.entries(root_path)

@@ -5767,6 +5767,13 @@ react-bootstrap@^0.31.5:
     uncontrollable "^4.1.0"
     warning "^3.0.0"
 
+react-data-components@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-data-components/-/react-data-components-1.2.0.tgz#e74ab203616e404ec17c94094a5c988fbea0ece9"
+  dependencies:
+    lodash "^4.13.1"
+    prop-types "^15.5.10"
+
 react-dom@^16.5.2:
   version "16.6.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.6.0.tgz#6375b8391e019a632a89a0988bce85f0cc87a92f"
