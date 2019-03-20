@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-# SingleCov.covered! file: '../app/services/white_rabbit/scheduler_service.rb'
-SingleCov.covered!
+
+SingleCov.covered! file: "white_rabbit/app/services/white_rabbit/scheduler_service.rb"
+# SingleCov.covered! file: "#{WhiteRabbit::Engine.root}/app/services/white_rabbit/scheduler_service.rb"
+# SingleCov.covered!
 module WhiteRabbit
   class MyDummyTask
     attr_reader :interval, :job, :params
