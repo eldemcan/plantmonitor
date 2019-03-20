@@ -2,7 +2,9 @@ PATH
   remote: white_rabbit
   specs:
     white_rabbit (0.1.0)
+      cronter
       rails (~> 5.2.1)
+      rufus-scheduler
 
 GEM
   remote: https://rubygems.org/
@@ -57,7 +59,6 @@ GEM
     coderay (1.1.2)
     concurrent-ruby (1.0.5)
     crass (1.0.4)
-    cron2english (0.1.6)
     cronter (0.1.2)
     erubi (1.7.1)
     et-orbi (1.1.6)
@@ -73,6 +74,7 @@ GEM
     i18n (1.1.1)
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.1)
+    jaro_winkler (1.5.1-x86_64-darwin-17)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
@@ -152,6 +154,7 @@ GEM
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.10.0)
     ruby_dep (1.5.0)
+    rufo (0.5.1)
     rufus-scheduler (3.5.2)
       fugit (~> 1.1, >= 1.1.5)
     sass (3.6.0)
@@ -207,11 +210,10 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-darwin-17
 
 DEPENDENCIES
   byebug
-  cron2english (~> 0.1.6)
-  cronter
   feature
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
@@ -220,7 +222,7 @@ DEPENDENCIES
   rails (~> 5.2.1)
   rpi_gpio
   rubocop
-  rufus-scheduler
+  rufo
   sass-rails (~> 5.0)
   serialport
   spring

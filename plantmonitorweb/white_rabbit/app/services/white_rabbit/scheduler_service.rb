@@ -2,6 +2,30 @@
 
 module WhiteRabbit
   class SchedulerService
+
+    # private_class_method :schedule_task, :verify_parameters, :convert_params_to_cron
+
+    def self.create_task(params)
+      return unless verify_parameters(params)
+      require 'byebug';byebug
+      cron_exp = convert_params_to_cron(params)
+      task = Object.const_get("WhiteRabbit::#{params[:jobTypes]}").new(cron_exp, params[:jobParams])
+      job_id = schedule_task(task)
+      WhiteRabbit::TaskModel.save_task(task, job_id)
+    end
+
+    def self.kill_task(job_id)
+      job = Rufus::Scheduler.singleton.job(job_id)
+      job&.unschedule
+      job&.kill
+      task = WhiteRabbit::TaskModel.find_by(job_id: job_id)
+      task.destroy
+    end
+
+    def self.clean_tasks
+      WhiteRabbit::TaskModel.delete_all
+    end
+
     def self.schedule_task(task)
       Rufus::Scheduler.singleton.cron(task.interval, task)
     end
@@ -23,14 +47,6 @@ module WhiteRabbit
         ranges[:hour].include?(params[:hours].to_i)
     end
 
-    def self.kill_task(job_id)
-      job = Rufus::Scheduler.singleton.job(job_id)
-      job&.unschedule
-      job&.kill
-      task = TaskModel.find_by(job_id: job_id)
-      task.destroy
-    end
-
     def self.convert_params_to_cron(params)
       type = params[:frequencyType]
       frequency = params[:frequency].to_i
@@ -48,19 +64,6 @@ module WhiteRabbit
       else
         Cronter.convert_to_cron(exp)
       end
-    end
-
-    def self.create_task(params)
-      return unless verify_parameters(params)
-
-      cron_exp = convert_params_to_cron(params)
-      task = Object.const_get("WhiteRabbit::#{params[:jobTypes]}").new(cron_exp, params[:jobParams])
-      job_id = schedule_task(task)
-      TaskModel.save_task(task, job_id)
-    end
-
-    def self.clean_tasks
-      TaskModel.delete_all
     end
   end
 end

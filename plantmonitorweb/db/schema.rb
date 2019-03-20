@@ -29,13 +29,6 @@ ActiveRecord::Schema.define(version: 2018_11_23_110720) do
     t.index ["socket_id"], name: "index_socket_models_on_socket_id", unique: true
   end
 
-  create_table "task_models", force: :cascade do |t|
-    t.string "job_class"
-    t.string "job_id"
-    t.string "interval"
-    t.string "params"
-  end
-
   create_table "white_rabbit_task_models", force: :cascade do |t|
     t.string "job_class"
     t.string "job_id"
