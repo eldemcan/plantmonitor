@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-SingleCov.covered!
+SingleCov.covered! uncovered: 4
 
 RSpec.describe WhiteRabbit::AdminController, type: :controller do
   routes { WhiteRabbit::Engine.routes }
@@ -10,7 +10,7 @@ RSpec.describe WhiteRabbit::AdminController, type: :controller do
       get :index
 
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq 'text/html'
+      expect(response.content_type).to eq('text/html')
     end
 
     it 'returns task_names' do
@@ -30,15 +30,26 @@ RSpec.describe WhiteRabbit::AdminController, type: :controller do
     end
 
     it 'lists all the tasks' do
-        require 'byebug';byebug
       task = FactoryBot.create(:task_model)
-
       get :fetch_jobs
 
       expect(response.status).to eq(200)
-      require 'byebug'; byebug
-      expect(JSON.parse(response.body)).to eq(task.id)
+      expect(JSON.parse(response.body).first['id']).to eq(task.id)
     end
 
+    it 'destroys job with given id' do
+      task = FactoryBot.create(:task_model)
+      double_job = double(unschedule: true, kill: true)
+      allow_any_instance_of(Rufus::Scheduler).to receive(:job).and_return(double_job)
+
+      delete :destroy_job, params: { jobId: task.id }
+      expect(response.status).to eq(200)
+    end
+
+    it 'returns unprocessable entity if job is not exists' do
+      delete :destroy_job, params: { jobId: 100 }
+
+      expect(response.status).to eq(422)
+    end
   end
 end

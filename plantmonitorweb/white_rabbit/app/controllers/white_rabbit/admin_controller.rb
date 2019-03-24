@@ -25,7 +25,13 @@ module WhiteRabbit
 
     def destroy_job
       job_id = params_for_destroy_job[:jobId]
-      SchedulerService.kill_task(job_id)
+      res = SchedulerService.kill_task(job_id)
+
+      if res
+        head :ok
+      else
+        head :unprocessable_entity
+      end
     end
 
     private

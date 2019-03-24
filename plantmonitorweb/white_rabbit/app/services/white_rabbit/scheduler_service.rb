@@ -17,7 +17,7 @@ module WhiteRabbit
         job&.unschedule
         job&.kill
         task = WhiteRabbit::TaskModel.find_by(job_id: job_id)
-        task.destroy
+        task&.destroy
       end
 
       def clean_tasks
