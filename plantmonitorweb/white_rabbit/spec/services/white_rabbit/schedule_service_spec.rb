@@ -2,31 +2,53 @@
 
 require 'rails_helper'
 
-SingleCov.covered! file: "white_rabbit/app/services/white_rabbit/scheduler_service.rb"
-# SingleCov.covered! file: "#{WhiteRabbit::Engine.root}/app/services/white_rabbit/scheduler_service.rb"
-# SingleCov.covered!
-module WhiteRabbit
-  class MyDummyTask
-    attr_reader :interval, :job, :params
+SingleCov.covered! uncovered: 6, file: 'app/services/white_rabbit/scheduler_service.rb'
 
-    def initialize(interval = '', params)
-      @interval = interval
-      @params = params
-    end
-
-    # duck type
-    def call(_job, _time)
-      p 'Hi'
-    end
-  end
-end
 
 describe WhiteRabbit::SchedulerService do
-  it 'works' do
-    params = { frequencyType: 'min', frequency: 1, jobParams: '', jobTypes: 'MyDummyTask' }
-    # WhiteRabbit::SchedulerService.create_task(params)
-    # WhiteRabbit::SchedulerService.stubs(:schedule_task).returns(1)
-    require 'byebug'; byebug
-    p 'hello world'
+  let(:params) { { frequencyType: 'min', frequency: 1, jobParams: '', jobTypes: 'MyDummyTask' } }
+
+  before do
+    allow(WhiteRabbit::SchedulerService).to receive(:schedule_task).and_return(1)
+  end
+
+  it 'creates a task with given parameters' do
+    WhiteRabbit::SchedulerService.create_task(params)
+    created_job = WhiteRabbit::TaskModel.first
+
+    expect(WhiteRabbit::TaskModel.all.count).to eq(1)
+    expect(created_job.interval).to eq('*/1 * * * *')
+    expect(created_job.job_id).to eq('1')
+    expect(created_job.job_class).to eq('WhiteRabbit::MyDummyTask')
+    expect(created_job.params.empty?).to be true
+  end
+
+  it 'does not create task with invalid parameters' do
+    params = { frequencyType: 'min', frequency: 100, jobParams: '', jobTypes: 'MyDummyTask' }
+    WhiteRabbit::SchedulerService.create_task(params)
+    created_job = WhiteRabbit::TaskModel.first
+
+    expect(created_job).to be nil
+  end
+
+  it 'kills given tasks' do
+    described_class.create_task(params)
+    double_job = double(:unschedule => true, :kill => true)
+    allow_any_instance_of(Rufus::Scheduler).to receive(:job).with(1).and_return(double_job)
+
+    expect(double_job).to receive(:unschedule)
+    expect(double_job).to receive(:kill)
+
+    described_class.kill_task(1)
+
+    expect(WhiteRabbit::TaskModel.all.count).to eq(0)
+  end
+
+  it 'cleans tasks' do
+    described_class.create_task(params)
+
+    described_class.clean_tasks
+
+    expect(WhiteRabbit::TaskModel.all.count).to eq(0)
   end
 end

@@ -6,7 +6,6 @@ module WhiteRabbit
 
     def index
       render :index
-      # render json: get_task_names
     end
 
     def task_types

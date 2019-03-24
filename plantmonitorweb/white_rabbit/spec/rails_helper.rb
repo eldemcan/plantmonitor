@@ -1,18 +1,37 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
+require 'rspec-rails'
+require 'cronter'
+require 'single_cov'
+
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../dummy/config/environment.rb', __FILE__)
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
-require 'rspec/rails'
-require 'cronter'
-require 'single_cov'
 
 SingleCov.setup :rspec
-SingleCov::APP_FOLDERS.concat(
-  %w(services)
-)
+
+RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods
+end
 # Add additional requires below this line. Rails is not loaded until this point!
+
+# this a dummy class represents a task
+module WhiteRabbit
+  class MyDummyTask
+    attr_reader :interval, :job, :params
+
+    def initialize(interval = '', params)
+      @interval = interval
+      @params = params
+    end
+
+    # duck type
+    def call(_job, _time)
+      p 'Hi'
+    end
+  end
+end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
