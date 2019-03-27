@@ -12,7 +12,7 @@ module WhiteRabbit
     # duck type
     def call(job, _time)
       @job = job
-      Rails.logger.info('[HELLO WORLD]')
+      Rails.logger.info("[HELLO WORLD] #{params}")
       p "Hello world, Job_id: #{job.id}"
     end
   end
