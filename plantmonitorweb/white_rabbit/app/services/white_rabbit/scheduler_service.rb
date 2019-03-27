@@ -7,7 +7,7 @@ module WhiteRabbit
         return unless verify_parameters(params)
 
         cron_exp = convert_params_to_cron(params)
-        task = Object.const_get("WhiteRabbit::#{params[:jobTypes]}").new(cron_exp, params[:jobParams])
+        task = Object.const_get("WhiteRabbit::#{params[:job_types]}").new(cron_exp, params[:job_params])
         job_id = schedule_task(task)
         WhiteRabbit::TaskModel.save_task(task, job_id)
       end
@@ -39,7 +39,7 @@ module WhiteRabbit
           daysw: 0..6
         }
 
-        frequency_type = ranges[params[:frequencyType].to_sym]
+        frequency_type = ranges[params[:frequency_type].to_sym]
 
         !frequency_type.nil? &&
           frequency_type.include?(params[:frequency].to_i) &&
@@ -48,7 +48,7 @@ module WhiteRabbit
       end
 
       def convert_params_to_cron(params)
-        type = params[:frequencyType]
+        type = params[:frequency_type]
         frequency = params[:frequency].to_i
         exp = if %w[min hour days].include?(type)
                 frequency.to_s + type[0]

@@ -13,19 +13,17 @@ module WhiteRabbit
     end
 
     def create
-      filtered_params = create_job_params
-      SchedulerService.create_task(filtered_params)
+      SchedulerService.create_task(create_job_params)
 
       head :ok
     end
 
     def fetch_jobs
-      render json: TaskModel.all
+      render json: TaskModelSerializer.new(TaskModel.all).serializable_hash[:data]
     end
 
     def destroy_job
-      job_id = params_for_destroy_job[:jobId]
-      res = SchedulerService.kill_task(job_id)
+      res = SchedulerService.kill_task(params_for_destroy_job[:job_id])
 
       if res
         head :ok
@@ -46,7 +44,7 @@ module WhiteRabbit
     end
 
     def params_for_destroy_job
-      params.permit(:jobId)
+      params.permit(:jobId).to_h.to_snake_keys.with_indifferent_access
     end
 
     def create_job_params
@@ -57,7 +55,7 @@ module WhiteRabbit
         :jobTypes,
         :hours,
         :minutes
-      )
+      ).to_h.to_snake_keys.with_indifferent_access
     end
   end
 end

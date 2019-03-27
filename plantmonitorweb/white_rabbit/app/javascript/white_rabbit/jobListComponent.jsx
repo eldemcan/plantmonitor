@@ -8,24 +8,9 @@ import BootstrapTable from 'react-bootstrap-table-next';
 
 class JobListComponent extends Component {
 
-  // renderRow(jobs) {
-  //    const res = jobs.map(job => {
-  //       return (
-  //         <tr>
-  //           <td>{job.job_class}</td>
-  //           <td>{job.interval}</td>
-  //           <td>{job.params}</td>
-  //           <td><Button bsStyle="danger" bsSize="small" onClick={() => this.handleClick(job.job_id)} >Stop</Button></td>
-  //         </tr>
-  //       );
-  //     });
-
-  //   return res;
-  // }
-
   addButtons(jobs) {
     return (jobs.map(job => {
-      job.action = this.createButton(job.job_id);
+      job.action = this.createButton(job.attributes.jobId);
       return job;
     }));
   }
@@ -44,24 +29,23 @@ class JobListComponent extends Component {
 
   defineColumns() {
     return  [{
-      dataField: 'job_class',
+      dataField: 'attributes.jobClass',
       text: 'Task name'
     }, {
-      dataField: 'interval',
+      dataField: 'attributes.interval',
       text: 'Inverval'
     }, {
-      dataField: 'params',
+      dataField: 'attributes.params',
       text: 'Params'
     },{
-      dataField:'action' ,
+      dataField: 'action' ,
       text: 'Actions',
     }];
   }
 
   render() {
-    // const CanTable = DataTable.DataTable;
-    // console.log(CanTable);
     const { jobs } = this.props;
+    console.log('[JobListComponent] jobs', jobs);
     const { SearchBar } = Search;
     const jobsButtonsAdded = this.addButtons(jobs);
     const am = (props) => {

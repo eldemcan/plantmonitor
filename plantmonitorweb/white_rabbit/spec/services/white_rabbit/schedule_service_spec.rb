@@ -4,9 +4,8 @@ require 'rails_helper'
 
 SingleCov.covered! uncovered: 6, file: 'app/services/white_rabbit/scheduler_service.rb'
 
-
 describe WhiteRabbit::SchedulerService do
-  let(:params) { { frequencyType: 'min', frequency: 1, jobParams: '', jobTypes: 'MyDummyTask' } }
+  let(:params) { { frequency_type: 'min', frequency: 1, job_params: '', job_types: 'MyDummyTask' } }
 
   before do
     allow(WhiteRabbit::SchedulerService).to receive(:schedule_task).and_return(1)
@@ -24,7 +23,7 @@ describe WhiteRabbit::SchedulerService do
   end
 
   it 'does not create task with invalid parameters' do
-    params = { frequencyType: 'min', frequency: 100, jobParams: '', jobTypes: 'MyDummyTask' }
+    params = { frequency_type: 'min', frequency: 100, job_params: '', job_types: 'MyDummyTask' }
     WhiteRabbit::SchedulerService.create_task(params)
     created_job = WhiteRabbit::TaskModel.first
 
@@ -33,7 +32,7 @@ describe WhiteRabbit::SchedulerService do
 
   it 'kills given tasks' do
     described_class.create_task(params)
-    double_job = double(:unschedule => true, :kill => true)
+    double_job = double(unschedule: true, kill: true)
     allow_any_instance_of(Rufus::Scheduler).to receive(:job).with(1).and_return(double_job)
 
     expect(double_job).to receive(:unschedule)

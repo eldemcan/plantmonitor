@@ -32,9 +32,8 @@ RSpec.describe WhiteRabbit::AdminController, type: :controller do
     it 'lists all the tasks' do
       task = FactoryBot.create(:task_model)
       get :fetch_jobs
-
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body).first['id']).to eq(task.id)
+      expect(JSON.parse(response.body).first['id']).to eq(task.id.to_s)
     end
 
     it 'destroys job with given id' do

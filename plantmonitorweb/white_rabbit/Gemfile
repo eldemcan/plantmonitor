@@ -18,6 +18,8 @@ gem 'sqlite3'
 gem 'cronter'
 gem 'rufus-scheduler'
 gem 'cron2english', '~> 0.1.6'
+gem 'fast_jsonapi'
+gem "plissken"
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
