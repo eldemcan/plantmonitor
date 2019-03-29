@@ -70,6 +70,21 @@
     "webpack": "^3.4.3",
     "webpack-dev-server": "^2.6.1"
   },
+  "babel" :{
+    "presets": [
+      [ "env", "react" ]
+    ],
+    "plugins": [
+      "transform-class-properties",
+      "syntax-dynamic-import",
+      [
+        "transform-class-properties",
+        {
+          "spec": true
+        }
+      ]
+    ]
+  },
   "scripts": {
     "build": "webpack -p"
   }

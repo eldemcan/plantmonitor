@@ -14,6 +14,8 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
+
+
   s.add_dependency 'cronter'
   s.add_dependency 'fast_jsonapi'
   s.add_dependency 'plissken'
