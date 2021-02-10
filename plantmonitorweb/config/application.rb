@@ -17,20 +17,32 @@ module Plantmonitorweb
     config.after_initialize do
       Rails.application.load_tasks # <---
       # Rake::Task['sensor_data:delete_sensor_data'].invoke
-      # initialize_sensor_reading
+      # initialize_sensor_reading if Feature.active?(:gpio)
+      # mock_sensor_reading if Rails.env.development?
+    end
+
+    def self.mock_sensor_reading
+      Thread.new do
+        loop do
+          mock_data = { temperature: rand(12), humidity: rand(31), moisture: rand(34) }
+          Rails.logger.info "Saving mock data with #{mock_data}"
+          SensorModel.save_sensor_data(mock_data.to_json)
+          sleep 10
+        end
+      end
     end
 
     def self.initialize_sensor_reading
       yaml_config = YAML.load_file("#{Rails.root.to_s}/config/config.yml")
       port = yaml_config['arduino']['serial_port']
-      p "Initializing arduino on port #{port}"
+      Rails.logger.info "Initializing arduino on port #{port}"
       ArduinoSerialPort.close_port
       ArduinoSerialPort.start_port(port: port)
       main_thread = Thread.new do
         loop do
           ArduinoSerialPort.start_writing
           sensor_data = ArduinoSerialPort.start_reading
-          p "Collecting sensor data #{sensor_data}"
+          Rails.logger.info "Collecting sensor data #{sensor_data}"
           SensorModel.save_sensor_data(sensor_data)
           sleep ArduinoSerialPort::SLEEP_TIME_SECONDS + 1
         end
@@ -39,7 +51,7 @@ module Plantmonitorweb
     end
 
     at_exit do
-      p 'Sensor device cleanup'
+      Rails.logger.info 'Sensor device cleanup'
       Thread.list.each do |t|
         Thread.kill(t)
       end

@@ -1,10 +1,16 @@
 class PlantDashboardController < ApplicationController
-  # http_basic_authenticate_with name: 'can', password: '123'
-  protect_from_forgery with: :null_session
+  # TODO add socet control view
   before_action :initialize_service, ony: %i[control_socket socket_state]
 
   def index
     render :index
+  end
+
+  # just to test action cable
+  def broadcast
+    ActionCable.server.broadcast('SensorDataChannel', {soilMoisture:'can' , temperature: '23' , humidity: '65'})
+
+    head :ok
   end
 
   def control_socket
@@ -16,13 +22,13 @@ class PlantDashboardController < ApplicationController
 
   def historical_data
     sensor_data = SensorModel.select(
-      :id,
       :temperature,
       :moisture,
       :humidity,
       'TIME(created_at) as record_time'
       )
-    render json: sensor_data
+    # sensor_data = SensorModel.select( :temperature, :moisture, :humidity, 'TIME(created_at) as record_time')
+    # render json: sensor_data
   end
 
   def socket_state
