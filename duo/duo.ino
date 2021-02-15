@@ -1,109 +1,84 @@
 #include "SimpleDHT.h"
 #include "ArduinoJson.h"
 
-const char* wifiSid = "skyconway_com-2263";
-const char* wifiPassword = "labt5c5ghc";
+
+#define DHT11_PIN 2
+#define MOISTURE_PIN A0
+#define MOISTURE_POWER 3
+
 SimpleDHT11 dht11;
-const int pinDHT11 = 2;
-
-int temperature = 0;
-int humidity = 0;
-int moisture = 0;
-
-const int moisturePin = A1;//Declare a variable for the moisture moisture sensor
-const int moisturePower = 3;//Variable for moisture moisture Power
 
 struct SensorData {
     int temperature = 0;
     int humidity = 0;
+    int moisture = 0;
 };
 
 void setup() {
-    networkSetup();
-    particleSetup();
     moistureSensorSetup();
-    Serial.begin(115200);
+    Serial.begin(9600);
 }
 
 void moistureSensorSetup() {
-    pinMode(moisturePower, OUTPUT);
-    digitalWrite(moisturePower, LOW);
-}
-
-void particleSetup() {
-    Particle.variable("temperature", temperature);
-    Particle.variable("humidity", humidity);
-}
-
-void networkSetup() {
-    WiFi.on();
-    WiFi.connect();
-
-    if (WiFi.ready()) {
-        Serial.println("WiFi connected");
-    } else {
-        Serial.println("Could not establish connection setting credentials");
-        WiFi.setCredentials(wifiSid, wifiPassword);
-    }
+    pinMode(MOISTURE_POWER, OUTPUT);
+    digitalWrite(MOISTURE_POWER, LOW);
 }
 
 // max without water 4025
 // submerged into water 1400-1500
-
-int readmoistureMoisture()
+int readMoisture()
 {
-    digitalWrite(moisturePower, HIGH);//turn D7 "On"
+    digitalWrite(MOISTURE_POWER, HIGH);
     delay(10);
-    const int val = analogRead(moisturePin);
-    digitalWrite(moisturePower, LOW);//turn D7 "Off"
-    return val;
+    const int val = analogRead(MOISTURE_PIN);
+//    const int dryness = map(val, 496, 1004, 0, 100);
+    const int dryness = map(val, 1004, 496, 0, 100);
+    digitalWrite(MOISTURE_POWER, LOW);
+    return dryness;
 }
 
-SensorData readTemperatureHumidity() {
-    SensorData sensorData ;
+int *readTemperatureHumidity() {
+    // SensorData sensorData ;
+    static int sensorData[2];
     byte temperature_byte = 0;
     byte humidity_byte = 0;
-    const int readResult = dht11.read(pinDHT11, &temperature_byte, &humidity_byte, NULL);
+    const int readResult = dht11.read(DHT11_PIN, &temperature_byte, &humidity_byte, NULL);
 
     if (readResult != SimpleDHTErrSuccess) {
         Serial.print("Read DHT11 failed, err=");
         Serial.println(readResult);
         delay(1000);
     } else {
-        sensorData.temperature = (int) temperature_byte;
-        sensorData.humidity = (int) humidity_byte;
-        Serial.print("Sample OK: ");
-        Serial.print(temperature); Serial.print(" *C, ");
-        Serial.print(humidity); Serial.println(" H");
+        sensorData[0] = (int) temperature_byte;
+        sensorData[1] = (int) humidity_byte;
     }
+    
     return sensorData;
 }
 
 void readPublishTemperatureHumidity() {
-    SensorData sensorData = readTemperatureHumidity();
+    int *dth11Data;
+    dth11Data = readTemperatureHumidity();
+    int moisture = readMoisture();
+    SensorData sensorData;
+    sensorData.temperature = dth11Data[0];
+    sensorData.humidity = dth11Data[1];
+    sensorData.moisture = moisture;
 
-    const String jsonData = createJsonObject(sensorData.temperature, sensorData.humidity);
-    Particle.publish("temperature-humidity", jsonData);
+    createJsonObject(sensorData);
 }
 
 
-String createJsonObject(const int temperature, const int humidity) {
-    StaticJsonBuffer<100> jsonBuffer;
-    JsonObject& root = jsonBuffer.createObject();
-    root["temperature"] = temperature;
-    root["humidity"] = humidity;
-    char buffer[256];
-    root.printTo(buffer, sizeof(buffer));
-    // jsonBuffer.clear();
-    return String(buffer);
+void createJsonObject(SensorData sensorData) {
+    StaticJsonDocument<200> doc;
+    doc["temperature"] = sensorData.temperature;
+    doc["humidity"] = sensorData.humidity;
+    doc["moisture"] = sensorData.moisture;
+    serializeJson(doc, Serial);
 }
 
 void loop() {
-    // readPublishTemperatureHumidity();
-    const int moisture = readmoistureMoisture();
-    Serial.print("Moisture");
-    Serial.print(moisture);
-
-    delay(1000);
+    readPublishTemperatureHumidity();
+    Serial.println("");
+    delay(4000);
 }
-
