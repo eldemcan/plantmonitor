@@ -1,2 +1,2 @@
 arduino:
-  serial_port: /dev/cu.wchusbserial1420
+  serial_port: /dev/cu.usbmodem1411201

@@ -5,14 +5,14 @@ class Dashboard extends Controller {
   static baseUrl = ''
 
   connect() {
-    let helloController = this;
+    let dashboardController = this;
 
     consumer.subscriptions.create({ channel: 'SensorDataChannel' }, {
       received(data) {
         console.log('received', data)
-        helloController.moistureTarget.innerText = data.moisture
-        helloController.temperatureTarget.innerText = data.temperature
-        helloController.humidityTarget.innerText = data.humidity
+        dashboardController.moistureTarget.innerText = data.moisture
+        dashboardController.temperatureTarget.innerText = data.temperature
+        dashboardController.humidityTarget.innerText = data.humidity
       },
       connected() {
         console.log('connected')

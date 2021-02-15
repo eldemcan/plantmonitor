@@ -9,7 +9,8 @@ Bundler.require(*Rails.groups)
 module Plantmonitorweb
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 5.1
+    config.load_defaults 6.0
+    config.autoload_paths << "#{Rails.root}/lib"
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -18,8 +19,10 @@ module Plantmonitorweb
       Rails.application.load_tasks # <---
       # Rake::Task['sensor_data:delete_sensor_data'].invoke
       # initialize_sensor_reading if Feature.active?(:gpio)
-      # mock_sensor_reading if Rails.env.development?
+      mock_sensor_reading if Rails.env.development?
+      initialize_sensor_reading if Rails.env.production?
     end
+
 
     def self.mock_sensor_reading
       Thread.new do
@@ -36,15 +39,15 @@ module Plantmonitorweb
       yaml_config = YAML.load_file("#{Rails.root.to_s}/config/config.yml")
       port = yaml_config['arduino']['serial_port']
       Rails.logger.info "Initializing arduino on port #{port}"
-      ArduinoSerialPort.close_port
-      ArduinoSerialPort.start_port(port: port)
+      Arduino::ArduinoSerialPort.close_port
+      Arduino::ArduinoSerialPort.start_port(port: port)
       main_thread = Thread.new do
         loop do
-          ArduinoSerialPort.start_writing
-          sensor_data = ArduinoSerialPort.start_reading
-          Rails.logger.info "Collecting sensor data #{sensor_data}"
-          SensorModel.save_sensor_data(sensor_data)
-          sleep ArduinoSerialPort::SLEEP_TIME_SECONDS + 1
+          Arduino::ArduinoSerialPort.start_writing
+          sensor_data = Arduino::ArduinoSerialPort.start_reading
+          Rails.logger.info "Sensor data #{sensor_data}"
+          SensorModel.create!(sensor_data) unless sensor_data.blank?
+          sleep Arduino::ArduinoSerialPort::SLEEP_TIME_SECONDS + 1
         end
       end
       main_thread
