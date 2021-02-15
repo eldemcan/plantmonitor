@@ -370,7 +370,8 @@ tags
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
-
+*.sqlite3 
+**/*.sqlite3
 **/tmp/
 **/cache
 **/cache/**
