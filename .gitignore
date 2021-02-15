@@ -372,6 +372,7 @@ tags
 .history
 *.sqlite3 
 **/*.sqlite3
+**/**/*.sqlite3
 **/tmp/
 **/cache
 **/cache/**
