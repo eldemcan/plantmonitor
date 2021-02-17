@@ -1,4 +1,4 @@
-class CreateSocketModels < ActiveRecord::Migration[5.1]
+class CreateSocketModels < ActiveRecord::Migration[6.0]
   def change
     create_table :socket_models do |t|
       t.integer :socket_id

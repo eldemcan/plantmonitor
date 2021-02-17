@@ -17,44 +17,14 @@ module Plantmonitorweb
     # -- all .rb files in that directory are automatically loaded.
     config.after_initialize do
       Rails.application.load_tasks # <---
-      # Rake::Task['sensor_data:delete_sensor_data'].invoke
+      Rake::Task['arduino:mock_sensor'].invoke if Rails.env.development? && ENV.fetch('MSENSOR', false)
+      Rake::Task['arduino:sensor'].invoke if Rails.env.production? && ENV.fetch('SENSOR', false)
       # initialize_sensor_reading if Feature.active?(:gpio)
-      mock_sensor_reading if Rails.env.development?
-      initialize_sensor_reading if Rails.env.production?
-    end
-
-
-    def self.mock_sensor_reading
-      Thread.new do
-        loop do
-          mock_data = { temperature: rand(12), humidity: rand(31), moisture: rand(34) }
-          Rails.logger.info "Saving mock data with #{mock_data}"
-          SensorModel.save_sensor_data(mock_data.to_json)
-          sleep 10
-        end
-      end
-    end
-
-    def self.initialize_sensor_reading
-      yaml_config = YAML.load_file("#{Rails.root.to_s}/config/config.yml")
-      port = yaml_config['arduino']['serial_port']
-      Rails.logger.info "Initializing arduino on port #{port}"
-      Arduino::ArduinoSerialPort.close_port
-      Arduino::ArduinoSerialPort.start_port(port: port)
-      main_thread = Thread.new do
-        loop do
-          Arduino::ArduinoSerialPort.start_writing
-          sensor_data = Arduino::ArduinoSerialPort.start_reading
-          Rails.logger.info "Sensor data #{sensor_data}"
-          SensorModel.create!(sensor_data) unless sensor_data.blank?
-          sleep Arduino::ArduinoSerialPort::SLEEP_TIME_SECONDS + 1
-        end
-      end
-      main_thread
+      # mock_sensor_reading if Rails.env.development?
+      # initialize_sensor_reading if Rails.env.production?
     end
 
     at_exit do
-      Rails.logger.info 'Sensor device cleanup'
       Thread.list.each do |t|
         Thread.kill(t)
       end

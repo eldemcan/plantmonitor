@@ -10,22 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_14_125752) do
+ActiveRecord::Schema.define(version: 2021_02_15_231714) do
 
   create_table "sensor_models", force: :cascade do |t|
     t.integer "temperature"
     t.integer "humidity"
     t.integer "moisture"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "socket_models", force: :cascade do |t|
     t.integer "socket_id"
     t.string "socket_label", null: false
     t.boolean "state"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["socket_id"], name: "index_socket_models_on_socket_id", unique: true
   end
 
