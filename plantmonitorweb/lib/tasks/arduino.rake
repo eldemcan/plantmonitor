@@ -34,9 +34,20 @@ def self.initialize_sensor_reading
       Arduino::ArduinoSerialPort.start_writing
       sensor_data = Arduino::ArduinoSerialPort.start_reading
       Rails.logger.info "Sensor data #{sensor_data}"
-      SensorModel.create!(sensor_data) unless sensor_data.blank?
+      SensorModel.create!(sensor_data) if validate_sensor_reading(sensor_data)
       sleep Arduino::ArduinoSerialPort::SLEEP_TIME_SECONDS + 1
     end
   end
   main_thread
+end
+
+def self.validate_sensor_reading(sensor_data)
+  return false if sensor_data.blank?
+  return false unless sensor_data.is_a?(Hash)
+
+  keys = [:temperature, :humidity, :moisture]
+
+  sensor_data = sensor_data.with_indifferent_access
+
+  keys.all? { |k|  sensor_data.key?(k) }
 end
