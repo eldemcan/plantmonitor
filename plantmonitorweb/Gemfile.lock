@@ -167,6 +167,7 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    redis (4.2.5)
     regexp_parser (2.0.3)
     rpi_gpio (0.5.0)
       epoll (~> 0.3)
@@ -241,6 +242,7 @@ DEPENDENCIES
   pi_mote (~> 0.1.1)
   puma (~> 4.1)
   rails (~> 6.0.3, >= 6.0.3.4)
+  redis (~> 4.0)
   sass-rails (>= 6)
   selenium-webdriver
   serialport (~> 1.3)
