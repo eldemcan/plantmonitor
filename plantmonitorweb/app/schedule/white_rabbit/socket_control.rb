@@ -15,9 +15,9 @@ module WhiteRabbit
       sc = PiMote::Sockets.new
 
       if action == 'on'
-        sc.switch_on(socket)
+        sc.switch_on(socket.to_i)
       else
-        sc.switch_off(socket)
+        sc.switch_off(socket.to_i)
       end
     end
   end
