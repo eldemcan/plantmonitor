@@ -18,7 +18,7 @@ def self.mock_sensor_reading
         mock_data = { temperature: rand(12), humidity: rand(31), moisture: rand(34) }
         Rails.logger.info "Saving mock data with #{mock_data}"
         SensorModel.save_sensor_data(mock_data.to_json)
-        sleep 10
+        sleep 60
       end
     end
 end
@@ -35,7 +35,7 @@ def self.initialize_sensor_reading
       sensor_data = Arduino::ArduinoSerialPort.start_reading
       Rails.logger.info "Sensor data #{sensor_data}"
       SensorModel.create!(sensor_data) if validate_sensor_reading(sensor_data)
-      sleep Arduino::ArduinoSerialPort::SLEEP_TIME_SECONDS + 1
+      sleep Arduino::ArduinoSerialPort::SLEEP_TIME_SECONDS
     end
   end
   main_thread

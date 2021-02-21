@@ -52,7 +52,7 @@ int *readTemperatureHumidity() {
         sensorData[0] = (int) temperature_byte;
         sensorData[1] = (int) humidity_byte;
     }
-    
+
     return sensorData;
 }
 
@@ -80,5 +80,5 @@ void createJsonObject(SensorData sensorData) {
 void loop() {
     readPublishTemperatureHumidity();
     Serial.println("");
-    delay(4000);
+    delay(60000);
 }

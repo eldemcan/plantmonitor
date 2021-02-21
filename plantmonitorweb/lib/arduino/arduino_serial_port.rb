@@ -2,7 +2,7 @@
 
 module Arduino
   class ArduinoSerialPort
-    SLEEP_TIME_SECONDS = 4
+    SLEEP_TIME_SECONDS = 60
 
     def self.start_port(given_opt = {})
       @@serial_port ||= begin
