@@ -26,16 +26,16 @@ end
 def self.initialize_sensor_reading
   yaml_config = YAML.load_file("#{Rails.root.to_s}/config/config.yml")
   port = yaml_config['arduino']['serial_port']
-  Rails.logger.info "Initializing arduino on port #{port}"
+  sleep_time = yaml_config['arduino']['read_period'].to_i
+  Rails.logger.debug "Initializing arduino on port #{port}"
   Arduino::ArduinoSerialPort.close_port
-  Arduino::ArduinoSerialPort.start_port(port: port)
+  Arduino::ArduinoSerialPort.start_port(port: port, sleep_time: sleep_time)
   main_thread = Thread.new do
     loop do
       Arduino::ArduinoSerialPort.start_writing
       sensor_data = Arduino::ArduinoSerialPort.start_reading
-      Rails.logger.info "Sensor data #{sensor_data}"
+      Rails.logger.debug "Sensor data #{sensor_data}"
       SensorModel.create!(sensor_data) if validate_sensor_reading(sensor_data)
-      sleep Arduino::ArduinoSerialPort::SLEEP_TIME_SECONDS
     end
   end
   main_thread

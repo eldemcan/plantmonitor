@@ -2,7 +2,6 @@
 
 module Arduino
   class ArduinoSerialPort
-    SLEEP_TIME_SECONDS = 60
 
     def self.start_port(given_opt = {})
       @@serial_port ||= begin
@@ -11,11 +10,12 @@ module Arduino
                             baud_rate: 9600,
                             data_bits: 8,
                             stop_bits: 1,
-                            sleep_time: SLEEP_TIME_SECONDS,
+                            sleep_time: 10,
                           }
 
                           opt = opt.merge(given_opt) if defined? given_opt
-                          puts "port connected #{port_connected?(opt[:port])}"
+                          @@sleep_time = opt[:sleep_time]
+                          puts "Port connected #{port_connected?(opt[:port])}"
                           return nil unless port_connected?(opt[:port])
 
                           SerialPort.new(opt[:port], opt[:baud_rate], opt[:data_bits], opt[:stop_bits], SerialPort::NONE)
@@ -27,7 +27,7 @@ module Arduino
         loop do
           @@serial_port.flush_output
           @@serial_port.write('r')
-          sleep SLEEP_TIME_SECONDS
+          sleep @@sleep_time
         end
       end
 
@@ -37,7 +37,7 @@ module Arduino
     def self.start_reading
       sensor_data = nil
       while sensor_data.nil?
-        sleep SLEEP_TIME_SECONDS
+        sleep @@sleep_time
         sensor_data = @@serial_port.readline
       end
 

@@ -13,16 +13,10 @@
 PATH=/home/pi/.rbenv/shims:/home/pi/.rbenv/bin:/home/pi/.asdf/shims:/home/pi/.asdf/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
 
 PROJECT=/home/pi/plantmonitor/plantmonitorweb
-PIDNAME="${PROJECT}/tmp/pids/server.pid"
-
-# SCRIPT=<COMMAND>
-# RUNAS=<USERNAME>
-
-# PIDFILE=/var/run/<NAME>.pid
-# LOGFILE=/var/log/<NAME>.log
+PIDFILE="${PROJECT}/tmp/pids/server.pid"
 
 start() {
-  if [ -f /var/run/$PIDNAME ] && kill -0 $(cat /var/run/$PIDNAME); then
+  if [ -f /var/run/$PIDFILE ] && kill -0 $(cat /var/run/$PIDFILE); then
     echo 'Service already running' >&2
     return 1
   fi
@@ -32,7 +26,6 @@ start() {
   export RAILS_SERVE_STATIC_FILES=true
   cd $PROJECT
   bundle exec rails s -e production -d > /tmp/plantservice.log 2>&1
-  #bundle exec rails s -e production -d > /tmp/plantservice.log 2>&1
   echo 'Service started'
 }
 
