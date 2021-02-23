@@ -17,11 +17,16 @@ module Plantmonitorweb
     # -- all .rb files in that directory are automatically loaded.
     config.after_initialize do
       Rails.application.load_tasks # <---
-      Rake::Task['arduino:mock_sensor'].invoke if Rails.env.development? && ENV.fetch('MSENSOR', false)
-      Rake::Task['arduino:sensor'].invoke if Rails.env.production? && ENV.fetch('SENSOR', false)
-      # initialize_sensor_reading if Feature.active?(:gpio)
-      # mock_sensor_reading if Rails.env.development?
-      # initialize_sensor_reading if Rails.env.production?
+      puts "===== #{Rails.env.development?} #{ENV.fetch('MSENSOR', false)}"
+      if Rails.env.development? && ENV.fetch('MSENSOR', false)
+        Rails.logger.debug("Running in fake sensor mode")
+        Rake::Task['arduino:mock_sensor'].invoke
+      end
+
+      if Rails.env.production? && ENV.fetch('SENSOR', false)
+        Rails.logger.debug("Trying to connect with Arduino")
+        Rake::Task['arduino:sensor'].invoke
+      end
     end
 
     at_exit do

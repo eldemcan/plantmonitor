@@ -8,7 +8,9 @@ namespace :arduino do
 
   desc "Start reading from arduino board"
   task sensor: :environment do
-    initialize_sensor_reading
+    fork do
+      initialize_sensor_reading
+    end
   end
 end
 
@@ -30,15 +32,17 @@ def self.initialize_sensor_reading
   Rails.logger.debug "Initializing arduino on port #{port}"
   Arduino::ArduinoSerialPort.close_port
   Arduino::ArduinoSerialPort.start_port(port: port, sleep_time: sleep_time)
-  main_thread = Thread.new do
     loop do
-      Arduino::ArduinoSerialPort.start_writing
-      sensor_data = Arduino::ArduinoSerialPort.start_reading
-      Rails.logger.debug "Sensor data #{sensor_data}"
-      SensorModel.create!(sensor_data) if validate_sensor_reading(sensor_data)
+      begin
+        Arduino::ArduinoSerialPort.start_writing
+        sensor_data = Arduino::ArduinoSerialPort.start_reading
+        Rails.logger.debug "Sensor data #{sensor_data}"
+        SensorModel.create!(sensor_data) if validate_sensor_reading(sensor_data)
+      rescue ThreadError => e
+        print_exception(e, true)
+        puts "Size of the thread list #{Thread.list.size}"
+      end
     end
-  end
-  main_thread
 end
 
 def self.validate_sensor_reading(sensor_data)
@@ -50,4 +54,9 @@ def self.validate_sensor_reading(sensor_data)
   sensor_data = sensor_data.with_indifferent_access
 
   keys.all? { |k|  sensor_data.key?(k) }
+end
+
+def self.print_exception(exception, explicit)
+  puts "[#{explicit ? 'EXPLICIT' : 'INEXPLICIT'}] #{exception.class}: #{exception.message}"
+  puts exception.backtrace.join("\n")
 end
