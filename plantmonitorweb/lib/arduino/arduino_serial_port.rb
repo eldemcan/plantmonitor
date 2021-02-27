@@ -24,11 +24,9 @@ module Arduino
 
     def self.start_writing
       writing_thread = Thread.new do
-        loop do
-          @@serial_port.flush_output
-          @@serial_port.write('r')
-          sleep @@sleep_time
-        end
+        @@serial_port.flush_output
+        @@serial_port.write("\r")
+        sleep @@sleep_time
       end
 
       writing_thread
@@ -38,7 +36,7 @@ module Arduino
       sensor_data = nil
       while sensor_data.nil?
         sleep @@sleep_time
-        sensor_data = @@serial_port.readline
+        sensor_data = @@serial_port.readline("\r")
       end
 
       begin
