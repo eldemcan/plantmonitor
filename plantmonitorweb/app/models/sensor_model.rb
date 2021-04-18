@@ -1,5 +1,5 @@
 class SensorModel < ApplicationRecord
-  after_commit :publish_data
+  after_commit :publish_data, on: :create
 
   def self.save_sensor_data(sensor_data_json)
     parsed = JSON.parse(sensor_data_json)

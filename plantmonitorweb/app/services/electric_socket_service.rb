@@ -1,7 +1,7 @@
 class ElectricSocketService
 
   def initialize
-    @@socket = PiMote.new if Feature.active?(:gpio)
+    @@socket = ::PiMote::Sockets.new if Feature.active?(:gpio)
   end
 
   def change_state_of_socket(state, socket_number)

@@ -9,37 +9,27 @@ Bundler.require(*Rails.groups)
 module Plantmonitorweb
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 5.1
+    config.load_defaults 6.0
+    config.autoload_paths << "#{Rails.root}/lib"
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.after_initialize do
       Rails.application.load_tasks # <---
-      # Rake::Task['sensor_data:delete_sensor_data'].invoke
-      # initialize_sensor_reading
-    end
-
-    def self.initialize_sensor_reading
-      yaml_config = YAML.load_file("#{Rails.root.to_s}/config/config.yml")
-      port = yaml_config['arduino']['serial_port']
-      p "Initializing arduino on port #{port}"
-      ArduinoSerialPort.close_port
-      ArduinoSerialPort.start_port(port: port)
-      main_thread = Thread.new do
-        loop do
-          ArduinoSerialPort.start_writing
-          sensor_data = ArduinoSerialPort.start_reading
-          p "Collecting sensor data #{sensor_data}"
-          SensorModel.save_sensor_data(sensor_data)
-          sleep ArduinoSerialPort::SLEEP_TIME_SECONDS + 1
-        end
+      puts "===== #{Rails.env.development?} #{ENV.fetch('MSENSOR', false)}"
+      if Rails.env.development? && ENV.fetch('MSENSOR', false)
+        Rails.logger.debug("Running in fake sensor mode")
+        Rake::Task['arduino:mock_sensor'].invoke
       end
-      main_thread
+
+      if Rails.env.production? && ENV.fetch('SENSOR', false)
+        Rails.logger.debug("Trying to connect with Arduino")
+        Rake::Task['arduino:sensor'].invoke
+      end
     end
 
     at_exit do
-      p 'Sensor device cleanup'
       Thread.list.each do |t|
         Thread.kill(t)
       end

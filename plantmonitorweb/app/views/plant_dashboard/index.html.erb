@@ -1,4 +1,67 @@
-<%= javascript_pack_tag 'app' %>
-<%= stylesheet_pack_tag 'app' %>
-
-
+<div class="container-fluid" data-controller='dashboard'>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Humidity</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Current</h6>
+              <h5  class="card-text" data-target="dashboard.humidity">
+                NA
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Temperature</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Current</h6>
+              <h5  class="card-text" data-target="dashboard.temperature">
+                NA
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Soild Moisture</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Current</h6>
+              <h5  class="card-text" data-target="dashboard.moisture">
+                NA
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <div class="card">
+            <h5 class="card-title">Humidity 24H</h5>
+            <div class="card-body">
+              <%= line_chart sensor_data(:humidity), colors: ["#030bfc"] %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <h5 class="card-title">Temperature 24H</h5>
+            <div class="card-body">
+              <%= line_chart sensor_data(:temperature), colors: ["#34eb46"] %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <h5 class="card-title">Moisture 24H</h5>
+            <div class="card-body">
+              <%= line_chart sensor_data(:moisture), colors: ["#fc6b03"] %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
