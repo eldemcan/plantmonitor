@@ -10,11 +10,12 @@ module Arduino
                             baud_rate: 9600,
                             data_bits: 8,
                             stop_bits: 1,
-                            sleep_time: 10,
+                            sleep_time: 5,
                           }
 
                           opt = opt.merge(given_opt) if defined? given_opt
                           @@sleep_time = opt[:sleep_time]
+                          puts "Sleep time #{@@sleep_time}"
                           puts "Port connected #{port_connected?(opt[:port])}"
                           return nil unless port_connected?(opt[:port])
 
@@ -33,18 +34,23 @@ module Arduino
     end
 
     def self.start_reading
-      sensor_data = nil
-      while sensor_data.nil?
+      sensor_data = @@serial_port.readline("\r")
+
+      loop do
+        return JSON.parse(sensor_data) if self.valid_json?(sensor_data)
+
         sleep @@sleep_time
         sensor_data = @@serial_port.readline("\r")
-      end
-
-      begin
-        JSON.parse(sensor_data)
-      rescue :: StandardError => _
-        ''
+        Rails.logger.debug("Raw: #{sensor_data}")
       end
     end
+
+    def self.valid_json?(json)
+      JSON.parse(json)
+      return true
+    rescue JSON::ParserError => e
+      return false
+   end
 
     def self.close_port
       return unless defined? @@serial_port
