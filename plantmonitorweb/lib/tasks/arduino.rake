@@ -12,6 +12,11 @@ namespace :arduino do
       initialize_sensor_reading
     end
   end
+
+  desc "Close port"
+  task close_port: :environment do
+    Arduino::ArduinoSerialPort.close_port
+  end
 end
 
 def self.mock_sensor_reading
@@ -36,27 +41,37 @@ def self.initialize_sensor_reading
       begin
         Arduino::ArduinoSerialPort.start_writing
         sensor_data = Arduino::ArduinoSerialPort.start_reading
-        Rails.logger.debug "Sensor data #{sensor_data}"
+        Rails.logger.debug("Sensor data is nil") if sensor_data.nil? || sensor_data.blank?
+        Rails.logger.debug("Sensor data #{sensor_data}") unless sensor_data.nil?
         SensorModel.create!(sensor_data) if validate_sensor_reading(sensor_data)
       rescue ThreadError => e
         print_exception(e, true)
-        puts "Size of the thread list #{Thread.list.size}"
+        Rails.logger.error("Size of the thread list #{Thread.list.size}")
       end
     end
 end
 
 def self.validate_sensor_reading(sensor_data)
-  return false if sensor_data.blank?
-  return false unless sensor_data.is_a?(Hash)
+  if sensor_data.blank?
+    Rails.logger.debug("Sensor data is blank")
+    return false
+  elsif sensor_data.is_a?(Hash) == false
+    Rails.logger.debug("Sensor data isn't hash #{sensor_data}")
+    return false
+  else
+    keys = [:temperature, :humidity, :moisture]
 
-  keys = [:temperature, :humidity, :moisture]
+    sensor_data = sensor_data.with_indifferent_access
 
-  sensor_data = sensor_data.with_indifferent_access
+    res = keys.all? { |k|  sensor_data.key?(k) }
 
-  keys.all? { |k|  sensor_data.key?(k) }
+    Rails.logger.debug("Sensor data is valid?: #{res}")
+
+    res
+  end
 end
 
 def self.print_exception(exception, explicit)
-  puts "[#{explicit ? 'EXPLICIT' : 'INEXPLICIT'}] #{exception.class}: #{exception.message}"
-  puts exception.backtrace.join("\n")
+  Rails.logger.error("[#{explicit ? 'EXPLICIT' : 'INEXPLICIT'}] #{exception.class}: #{exception.message}")
+  Rails.logger.error(exception.backtrace.join("\n"))
 end

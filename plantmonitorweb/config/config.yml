@@ -1,3 +1,3 @@
 arduino:
   serial_port: /dev/ttyACM0
-  read_period: 10
+  read_period: 5
